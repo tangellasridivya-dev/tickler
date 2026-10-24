@@ -1,6 +1,6 @@
 /*
- * Tickler design tokens, modelled on the Fluent 2 design language used by
- * Microsoft To Do: Segoe UI type ramp, neutral greys, a blue brand colour,
+ * Tickler design tokens: the "Tickler Teal" brand (teal primary, coral accent)
+ * on a Fluent 2 style base: Segoe UI type ramp, soft neutrals,
  * 4px corners and layered soft shadows. Light is the default; dark applies
  * when the OS prefers it (unless the user picked light) or when the user picks it.
  *
@@ -13,30 +13,31 @@
   color-scheme: light;
 
   /* Brand */
-  --color-primary: #0f6cbd;          /* brand foreground: links, accents, icons */
-  --color-primary-hover: #115ea3;
-  --color-primary-subtle: #ebf3fc;
-  --color-primary-subtle-hover: #cfe4fa;
-  --color-primary-border: #b4d6fa;
-  --color-brand-bg: #0f6cbd;         /* filled primary buttons */
-  --color-brand-bg-hover: #115ea3;
+  --color-primary: #0a7368;          /* brand foreground: links, accents, icons */
+  --color-primary-hover: #085e55;
+  --color-primary-subtle: #e6f4f2;
+  --color-primary-subtle-hover: #cdeae6;
+  --color-primary-border: #a7d9d2;
+  --color-brand-bg: #0b7d73;         /* filled primary buttons */
+  --color-brand-bg-hover: #096a61;
   --color-on-primary: #ffffff;
+  --color-accent: #ff7a59;          /* coral: warmth, used sparingly */
 
   /* Neutrals */
-  --color-bg: #faf9f8;
+  --color-bg: #f6faf9;
   --color-surface: #ffffff;
-  --color-surface-muted: #f5f5f5;
-  --color-surface-hover: #f5f5f5;
-  --color-surface-pressed: #e0e0e0;
-  --color-text: #242424;
-  --color-text-secondary: #616161;
-  --color-text-tertiary: #707070;
-  --color-border: #e0e0e0;
-  --color-border-strong: #d1d1d1;
+  --color-surface-muted: #f1f5f4;
+  --color-surface-hover: #f1f5f4;
+  --color-surface-pressed: #dde6e4;
+  --color-text: #1d2725;
+  --color-text-secondary: #5b6966;
+  --color-text-tertiary: #6f7c79;
+  --color-border: #e1e8e6;
+  --color-border-strong: #cfd9d6;
   --color-overlay: rgba(0, 0, 0, 0.4);
-  --color-inverted-bg: #292929;
+  --color-inverted-bg: #1d2725;
   --color-inverted-text: #ffffff;
-  --color-inverted-link: #479ef5;
+  --color-inverted-link: #6edccf;
 
   /* Status */
   --color-success: #107c10;
@@ -45,13 +46,13 @@
   --color-warning: #bc4b09;
   --color-warning-text: #bc4b09;
   --color-warning-subtle: #fff9f5;
-  --color-error: #c50f1f;
-  --color-error-text: #b10e1c;
-  --color-error-subtle: #fdf3f4;
-  --color-error-border: #eeacb2;
+  --color-error: #d92d20;
+  --color-error-text: #b42318;
+  --color-error-subtle: #fef3f2;
+  --color-error-border: #fecdca;
 
   /* Priority */
-  --color-priority-high: #c50f1f;
+  --color-priority-high: #d92d20;
   --color-priority-normal: #0f6cbd;
 
   /* Typography: Fluent 2 type ramp */
@@ -108,48 +109,48 @@
   --column-width: 320px;
 
   /* Soft colour wash behind the top of the page */
-  --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(15, 108, 189, 0.16), transparent 60%),
-    radial-gradient(90% 100% at 100% 0%, rgba(194, 57, 179, 0.1), transparent 65%);
+  --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(14, 143, 132, 0.16), transparent 60%),
+    radial-gradient(90% 100% at 100% 0%, rgba(255, 122, 89, 0.12), transparent 65%);
 }
 
 /* Dark theme values, shared by the two selectors below. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(71, 158, 245, 0.2), transparent 60%),
-      radial-gradient(90% 100% at 100% 0%, rgba(194, 57, 179, 0.14), transparent 65%);
-    --color-primary: #479ef5;
-    --color-primary-hover: #62abf5;
-    --color-primary-subtle: #082338;
-    --color-primary-subtle-hover: #0c3b5e;
-    --color-primary-border: #0e4775;
-    --color-brand-bg: #115ea3;
-    --color-brand-bg-hover: #0f6cbd;
-    --color-bg: #1f1f1f;
-    --color-surface: #292929;
-    --color-surface-muted: #2e2e2e;
-    --color-surface-hover: #333333;
-    --color-surface-pressed: #3d3d3d;
-    --color-text: #ffffff;
-    --color-text-secondary: #d6d6d6;
-    --color-text-tertiary: #adadad;
-    --color-border: #3d3d3d;
-    --color-border-strong: #525252;
+    --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(79, 209, 193, 0.16), transparent 60%),
+      radial-gradient(90% 100% at 100% 0%, rgba(255, 122, 89, 0.12), transparent 65%);
+    --color-primary: #4fd1c1;
+    --color-primary-hover: #6edccf;
+    --color-primary-subtle: #0c2f2b;
+    --color-primary-subtle-hover: #124540;
+    --color-primary-border: #175b53;
+    --color-brand-bg: #0b7d73;
+    --color-brand-bg-hover: #0e8f84;
+    --color-bg: #151b1a;
+    --color-surface: #1f2726;
+    --color-surface-muted: #253030;
+    --color-surface-hover: #2a3533;
+    --color-surface-pressed: #34403e;
+    --color-text: #f2f5f4;
+    --color-text-secondary: #c9d2d0;
+    --color-text-tertiary: #9aa6a3;
+    --color-border: #2f3b39;
+    --color-border-strong: #475553;
     --color-overlay: rgba(0, 0, 0, 0.5);
-    --color-inverted-bg: #ffffff;
-    --color-inverted-text: #242424;
-    --color-inverted-link: #0f6cbd;
+    --color-inverted-bg: #f2f5f4;
+    --color-inverted-text: #1d2725;
+    --color-inverted-link: #0a7368;
     --color-success: #54b054;
     --color-success-text: #54b054;
     --color-success-subtle: #052505;
     --color-warning: #faa06b;
     --color-warning-text: #faa06b;
     --color-warning-subtle: #4a1e04;
-    --color-error: #dc626d;
-    --color-error-text: #dc626d;
-    --color-error-subtle: #3b0509;
-    --color-error-border: #6e0811;
-    --color-priority-high: #dc626d;
+    --color-error: #f07178;
+    --color-error-text: #f07178;
+    --color-error-subtle: #3a1416;
+    --color-error-border: #6e2a2e;
+    --color-priority-high: #f07178;
     --color-priority-normal: #479ef5;
     --shadow-xs: 0 0 2px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.28);
     --shadow-sm: 0 0 2px rgba(0, 0, 0, 0.24), 0 2px 4px rgba(0, 0, 0, 0.28);
@@ -160,40 +161,40 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(71, 158, 245, 0.2), transparent 60%),
-    radial-gradient(90% 100% at 100% 0%, rgba(194, 57, 179, 0.14), transparent 65%);
-  --color-primary: #479ef5;
-  --color-primary-hover: #62abf5;
-  --color-primary-subtle: #082338;
-  --color-primary-subtle-hover: #0c3b5e;
-  --color-primary-border: #0e4775;
-  --color-brand-bg: #115ea3;
-  --color-brand-bg-hover: #0f6cbd;
-  --color-bg: #1f1f1f;
-  --color-surface: #292929;
-  --color-surface-muted: #2e2e2e;
-  --color-surface-hover: #333333;
-  --color-surface-pressed: #3d3d3d;
-  --color-text: #ffffff;
-  --color-text-secondary: #d6d6d6;
-  --color-text-tertiary: #adadad;
-  --color-border: #3d3d3d;
-  --color-border-strong: #525252;
+  --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(79, 209, 193, 0.16), transparent 60%),
+    radial-gradient(90% 100% at 100% 0%, rgba(255, 122, 89, 0.12), transparent 65%);
+  --color-primary: #4fd1c1;
+  --color-primary-hover: #6edccf;
+  --color-primary-subtle: #0c2f2b;
+  --color-primary-subtle-hover: #124540;
+  --color-primary-border: #175b53;
+  --color-brand-bg: #0b7d73;
+  --color-brand-bg-hover: #0e8f84;
+  --color-bg: #151b1a;
+  --color-surface: #1f2726;
+  --color-surface-muted: #253030;
+  --color-surface-hover: #2a3533;
+  --color-surface-pressed: #34403e;
+  --color-text: #f2f5f4;
+  --color-text-secondary: #c9d2d0;
+  --color-text-tertiary: #9aa6a3;
+  --color-border: #2f3b39;
+  --color-border-strong: #475553;
   --color-overlay: rgba(0, 0, 0, 0.5);
-  --color-inverted-bg: #ffffff;
-  --color-inverted-text: #242424;
-  --color-inverted-link: #0f6cbd;
+  --color-inverted-bg: #f2f5f4;
+  --color-inverted-text: #1d2725;
+  --color-inverted-link: #0a7368;
   --color-success: #54b054;
   --color-success-text: #54b054;
   --color-success-subtle: #052505;
   --color-warning: #faa06b;
   --color-warning-text: #faa06b;
   --color-warning-subtle: #4a1e04;
-  --color-error: #dc626d;
-  --color-error-text: #dc626d;
-  --color-error-subtle: #3b0509;
-  --color-error-border: #6e0811;
-  --color-priority-high: #dc626d;
+  --color-error: #f07178;
+  --color-error-text: #f07178;
+  --color-error-subtle: #3a1416;
+  --color-error-border: #6e2a2e;
+  --color-priority-high: #f07178;
   --color-priority-normal: #479ef5;
   --shadow-xs: 0 0 2px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.28);
   --shadow-sm: 0 0 2px rgba(0, 0, 0, 0.24), 0 2px 4px rgba(0, 0, 0, 0.28);

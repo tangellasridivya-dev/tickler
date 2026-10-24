@@ -1,64 +1,60 @@
 import { forwardRef } from 'react'
-import { Plus } from 'lucide-react'
-import PersonGroups from './PersonGroups.jsx'
+import TimelineCards from './TimelineCards.jsx'
 import TimelineList from './TimelineList.jsx'
 import './TaskLists.css'
-import { formatRelativeDay } from '../../lib/dates.js'
+import { isSameDay } from '../../lib/dates.js'
 
 const dayFormat = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short' })
+const weekdayFormat = new Intl.DateTimeFormat(undefined, { weekday: 'long' })
 
 function columnTitle(column, now) {
-  if (column.kind === 'overdue') return { title: 'Overdue', sub: 'Earlier' }
   if (column.kind === 'later') return { title: 'Later', sub: 'After this week' }
-  const title = formatRelativeDay(column.date, now)
-  // "Tomorrow" needs no date beside it; Today and other weekdays show it small.
-  return { title, sub: title === 'Tomorrow' ? null : dayFormat.format(column.date) }
+  // "Today" stays as a word; every other day uses its name ("Sunday"), with the date small beside it.
+  const title = isSameDay(column.date, now) ? 'Today' : weekdayFormat.format(column.date)
+  return { title, sub: dayFormat.format(column.date) }
 }
 
-function DateColumn({ column, scope, now, onToggle, onOpen, onAdd }) {
-  const List = scope === 'by-me' ? PersonGroups : TimelineList
+function DateColumn({ column, now, onToggle, onOpen, onToggleSubtask, cards }) {
   const { title, sub } = columnTitle(column, now)
   const headingId = `col-${column.id}`
-  const canAdd = column.kind === 'today' || column.kind === 'day'
+  // Show the day on rows only where a column can hold more than one day:
+  // "Later", and the earliest past day (which also holds older unfinished tasks).
+  const showDay = column.kind === 'later' || column.tasks.some((t) => !isSameDay(t.dueAt, column.date))
+  const List = cards ? TimelineCards : TimelineList
 
   return (
     <section className={`board-col board-col--${column.kind}`} aria-labelledby={headingId}>
-      <header className="board-col__head">
-        <h2 id={headingId} className="board-col__title">
-          {title}
-          {sub && <span className="board-col__date">{sub}</span>}
-        </h2>
-        {column.openCount > 0 && (
-          <span className="board-col__count" aria-label={`${column.openCount} to do`}>
-            {column.openCount}
-          </span>
-        )}
-      </header>
+      {/* The date strip shows the day; the heading stays for screen readers. */}
+      <h2 id={headingId} className="visually-hidden">
+        {title}
+        {sub && `, ${sub}`}
+      </h2>
 
       {column.tasks.length > 0 ? (
         <List
           tasks={column.tasks}
           now={now}
-          showDay={column.kind === 'overdue' || column.kind === 'later'}
+          showDay={showDay}
           onToggle={onToggle}
           onOpen={onOpen}
+          onToggleSubtask={onToggleSubtask}
         />
       ) : (
         <p className="board-col__empty">No tasks</p>
-      )}
-
-      {canAdd && (
-        <button type="button" className="add-task" onClick={() => onAdd(column.date)}>
-          <Plus size={20} aria-hidden="true" />
-          Add a task
-        </button>
       )}
     </section>
   )
 }
 
-/** Date columns that scroll horizontally. "To me" shows a timeline, "By me" groups by person. */
-const DateBoard = forwardRef(function DateBoard({ columns, scope, now, onToggle, onOpen, onAdd, onScroll }, ref) {
+/**
+ * Date columns that scroll horizontally (To me and My tasks). `cards` switches
+ * To me to the MyGate-style feed card (TimelineCards) instead of the compact
+ * row list (TimelineList); My tasks always uses the compact rows.
+ */
+const DateBoard = forwardRef(function DateBoard(
+  { columns, now, onToggle, onOpen, onToggleSubtask, onScroll, cards = false },
+  ref,
+) {
   return (
     <div
       ref={ref}
@@ -73,11 +69,11 @@ const DateBoard = forwardRef(function DateBoard({ columns, scope, now, onToggle,
         <DateColumn
           key={column.id}
           column={column}
-          scope={scope}
           now={now}
           onToggle={onToggle}
           onOpen={onOpen}
-          onAdd={onAdd}
+          onToggleSubtask={onToggleSubtask}
+          cards={cards}
         />
       ))}
     </div>

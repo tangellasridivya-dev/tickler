@@ -1,0 +1,224 @@
+/* ---------- Subtasks: "1/3" pill and the list it opens ---------- */
+.subtask-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font: inherit;
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.subtask-toggle:hover,
+.subtask-toggle.is-open {
+  border-color: var(--color-primary-border);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.subtask-toggle.is-complete {
+  color: var(--color-success-text);
+}
+
+.subtask-toggle__chevron {
+  transition: transform 150ms ease;
+}
+
+.subtask-toggle.is-open .subtask-toggle__chevron {
+  transform: rotate(180deg);
+}
+
+.subtask-toggle:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* Lines up with the task text (past the 28px picture and the row gap). */
+.subtasks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: calc(var(--space-2) * -1) 0 0;
+  padding: 0 var(--space-2) var(--space-3) calc(var(--space-2) + 28px + var(--space-3));
+  list-style: none;
+  animation: subtasks-in 160ms ease-out;
+}
+
+@keyframes subtasks-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.subtask__check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 28px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-secondary);
+}
+
+label.subtask__check {
+  cursor: pointer;
+}
+
+.subtask__check input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.subtask__box {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--color-border-strong, var(--color-text-tertiary));
+  border-radius: 5px;
+  color: #ffffff;
+}
+
+.subtask.is-done .subtask__box {
+  border-color: var(--color-success);
+  background: var(--color-success);
+}
+
+.subtask.is-done .subtask__title {
+  color: var(--color-text-tertiary);
+  text-decoration: line-through;
+}
+
+.subtask__check input:focus-visible + .subtask__box {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* ---------- Subtask editor (new task, edit task) ---------- */
+.subtask-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.subtask-editor__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subtask-editor__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 34px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+}
+
+.subtask-editor__dot {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: 4px;
+}
+
+.subtask-editor__item.is-done .subtask-editor__dot {
+  border-color: var(--color-success);
+  background: var(--color-success);
+}
+
+.subtask-editor__item.is-done .subtask-editor__title {
+  color: var(--color-text-tertiary);
+  text-decoration: line-through;
+}
+
+.subtask-editor__title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.subtask-editor__remove {
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-tertiary);
+}
+
+.subtask-editor__add {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.subtask-editor__add .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.subtask-editor__add-btn {
+  flex-shrink: 0;
+  width: 40px;
+  padding: 0;
+}
+
+/* ---------- Category pills (new task, edit task) ---------- */
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.category-pills legend {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.category-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.category-pill input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.category-pill.is-on {
+  border-color: var(--color-primary);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.category-pill:has(input:focus-visible) {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}

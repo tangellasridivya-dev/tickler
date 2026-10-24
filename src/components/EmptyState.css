@@ -11,20 +11,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
-  background: var(--color-surface-muted);
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
 }
 
 .empty-state--success .empty-state__icon {
-  background: var(--color-success-subtle);
   color: var(--color-success);
 }
 
 .empty-state--primary .empty-state__icon {
-  background: var(--color-primary-subtle);
   color: var(--color-primary);
 }
 
@@ -52,8 +46,6 @@
 }
 
 .empty-state--compact .empty-state__icon {
-  width: 40px;
-  height: 40px;
   flex-shrink: 0;
 }
 

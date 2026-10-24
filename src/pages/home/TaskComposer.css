@@ -1,0 +1,216 @@
+/* Floating pill task box: detached from the edges, hovering above the list. */
+.composer {
+  position: fixed;
+  right: 0;
+  bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+  left: 0;
+  z-index: 40;
+  width: min(720px, calc(100% - 2 * var(--space-4)));
+  margin: 0 auto;
+  padding: 6px 6px 6px 8px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 24px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  animation: composer-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes composer-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.composer:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--color-primary);
+}
+
+.composer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.composer__row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.composer__more {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+}
+
+/* The pill is the field, so the input itself is borderless. */
+.composer__input {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 var(--space-1);
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--text-base);
+}
+
+.composer__input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.composer__input:focus {
+  outline: none;
+}
+
+.composer__send {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-bg);
+  color: var(--color-on-primary);
+  transition: background-color var(--transition-fast), opacity var(--transition-fast);
+}
+
+.composer__send:hover:not(:disabled) {
+  background: var(--color-brand-bg-hover);
+}
+
+.composer__send:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.composer__send:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* Detected chips, inside the pill above the text */
+.composer__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 2px 4px 0 76px;
+}
+
+.composer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 4px 0 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  animation: composer-chip-in var(--transition-base);
+}
+
+.composer-chip:not(:has(button)) {
+  padding-right: 8px;
+}
+
+.composer-chip--high {
+  background: var(--color-error-subtle);
+  color: var(--color-priority-high);
+}
+
+.composer-chip__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.composer-chip__remove:hover {
+  background: var(--color-overlay);
+  opacity: 1;
+}
+
+@keyframes composer-chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (max-width: 479px) {
+  .composer {
+    bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
+    width: calc(100% - 2 * var(--space-2));
+  }
+
+  .composer__chips {
+    padding-left: 4px;
+  }
+}
+
+/* Floating + button, bottom-right; opens the task box above. */
+.composer-fab {
+  position: fixed;
+  right: var(--space-5);
+  bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-bg);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-lg);
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.composer-fab:hover {
+  background: var(--color-brand-bg-hover);
+  transform: scale(1.04);
+}
+
+.composer-fab:active {
+  transform: scale(0.96);
+}
+
+.composer-fab:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+@media (max-width: 479px) {
+  .composer-fab {
+    right: var(--space-4);
+    bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  }
+}
+
+.composer-chip--button {
+  padding: 0 8px 0 6px;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.composer-chip--button:hover {
+  background: var(--color-primary-subtle-hover);
+}

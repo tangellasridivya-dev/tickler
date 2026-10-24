@@ -1,20 +1,17 @@
 // Small pieces shared by the task layouts on the Home board.
-import { Check, Circle, CircleCheck, CircleDashed, Flag, Hourglass } from 'lucide-react'
-import { getPerson } from '../../data/people.js'
-import { isMine, isOverdue } from '../../domain/selectors.js'
+import { Flag, Repeat } from 'lucide-react'
+import { isOverdue } from '../../domain/selectors.js'
 import { formatTime, isSameDay } from '../../lib/dates.js'
-import { PROGRESS, getProgress } from '../../domain/task.js'
 
 const weekday = new Intl.DateTimeFormat(undefined, { weekday: 'short' })
 const shortDate = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short' })
 
-/** Chat-style time: "2:30 PM" today, then "Yesterday", "Tomorrow", "Mon", "30 Oct". */
+/** Chat-style time: "2:30 PM" today, then "Yesterday", "Mon", "30 Oct". */
 function chatTime(date, now) {
   const d = new Date(date)
   if (isSameDay(d, now)) return formatTime(d)
   const days = Math.round((new Date(d).setHours(0, 0, 0, 0) - new Date(now).setHours(0, 0, 0, 0)) / 86_400_000)
   if (days === -1) return 'Yesterday'
-  if (days === 1) return 'Tomorrow'
   if (Math.abs(days) < 7) return weekday.format(d)
   return shortDate.format(d)
 }
@@ -24,7 +21,7 @@ export function TaskTime({ task, now, showDay, className = '' }) {
   const overdue = isOverdue(task, now)
   return (
     <time
-      className={`task-time${overdue ? ' task-time--overdue' : ''}${task.status === 'done' ? ' task-time--done' : ''} ${className}`}
+      className={`task-time ${className}`}
       dateTime={task.dueAt}
     >
       {overdue && <span className="visually-hidden">Overdue, due </span>}
@@ -49,51 +46,12 @@ export function PriorityFlag({ task, className = '' }) {
   )
 }
 
-/**
- * Checkbox. Your own tasks get a real checkbox; tasks someone else is doing
- * show a dashed box (filled once they've finished) that can't be ticked here.
- */
-export function TaskCheck({ task, onToggle }) {
-  const done = task.status === 'done'
-  if (isMine(task)) {
-    return (
-      <label className="task-check" title={done ? 'Mark as not done' : 'Mark as done'}>
-        <input
-          type="checkbox"
-          checked={done}
-          onChange={() => onToggle(task, !done)}
-          aria-label={done ? `Mark “${task.title}” as not done` : `Mark “${task.title}” as done`}
-        />
-        <span className="task-check__circle" aria-hidden="true">
-          <Check size={11} strokeWidth={3} />
-        </span>
-      </label>
-    )
-  }
-  const name = getPerson(task.assigneeId).name
-  const status = done ? `Done by ${name}` : `Waiting on ${name}`
+/** Small icon marking a repeating task. */
+export function RepeatIcon({ task }) {
+  if (!task.repeat || task.repeat === 'none') return null
   return (
-    <span
-      className={`task-check__circle task-check__circle--theirs${done ? ' is-done' : ''}`}
-      role="img"
-      aria-label={status}
-      title={status}
-    >
-      <Check size={11} strokeWidth={3} aria-hidden="true" />
-    </span>
-  )
-}
-
-const PROGRESS_ICONS = { pending: Hourglass, 'not-started': Circle, 'in-progress': CircleDashed, done: CircleCheck }
-
-/** Progress label for a task someone else is doing: Awaiting acceptance, Not started, In progress or Done. */
-export function ProgressBadge({ task }) {
-  const progress = getProgress(task)
-  const Icon = PROGRESS_ICONS[progress]
-  return (
-    <span className={`progress-badge progress-badge--${progress}`}>
-      <Icon size={11} strokeWidth={2.5} aria-hidden="true" />
-      {PROGRESS[progress].label}
+    <span className="repeat-icon" role="img" aria-label={`Repeats ${task.repeat}`} title={`Repeats ${task.repeat}`}>
+      <Repeat size={12} aria-hidden="true" />
     </span>
   )
 }

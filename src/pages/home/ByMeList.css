@@ -1,0 +1,207 @@
+/* ---------- By me: vertical list by day ---------- */
+.byme {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: 760px;
+}
+
+.byme-section__title {
+  margin: 0 0 var(--space-1);
+  padding: 0 var(--space-2);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  color: var(--color-text-secondary);
+}
+
+.byme-section__title.is-today {
+  color: var(--color-primary);
+}
+
+.byme-section__list {
+  display: flex;
+  flex-direction: column;
+  /* Sections already separate the days; rows within one are set apart by
+     space, not another line, so the page doesn't turn into a grid of rules. */
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.byme-item {
+  border-radius: var(--radius-md);
+}
+
+/* A quick wash when a task finishes, so it reads as a small win here too. */
+.byme-item.is-celebrating {
+  animation: task-celebrate-flash 700ms ease-out;
+}
+
+@keyframes task-celebrate-flash {
+  0%,
+  70% {
+    background: var(--color-success-subtle);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.byme-row {
+  display: flex;
+  /* Top-aligned: these rows can run to three lines (title, subtasks, meta),
+     so a centred picture would float oddly between them. */
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: 60px;
+  padding: var(--space-3) var(--space-2);
+}
+
+.byme-row__avatar {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 1px;
+  width: 28px;
+  height: 28px;
+}
+
+.task-celebrate-badge {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: var(--color-success);
+  color: #ffffff;
+  animation: task-celebrate-pop 700ms ease-out forwards;
+}
+
+@keyframes task-celebrate-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  60% {
+    transform: scale(0.96);
+  }
+  85%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.byme-row__sub-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.byme-row__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.byme-row__main:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.byme-row__title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: var(--weight-medium);
+  line-height: 18px;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.byme-row__main:hover .byme-row__title {
+  color: var(--color-primary);
+}
+
+.byme-item.is-done .byme-row__title {
+  color: var(--color-text-tertiary);
+  text-decoration: line-through;
+}
+
+.byme-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 6px;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--color-text-tertiary);
+}
+
+.byme-row__meta .priority-flag svg {
+  width: 10px;
+  height: 10px;
+}
+
+.byme-row__progress {
+  font-weight: var(--weight-semibold);
+}
+
+.byme-row__progress--pending {
+  color: var(--color-warning-text);
+}
+
+.byme-row__progress--declined {
+  color: var(--color-error-text);
+}
+
+.byme-row__progress--in-progress {
+  color: var(--color-primary);
+}
+
+.byme-row__progress--done {
+  color: var(--color-success-text);
+}
+
+.byme-row__remind {
+  flex-shrink: 0;
+  align-self: flex-start;
+  width: 30px;
+  height: 30px;
+  color: var(--color-primary);
+}
+
+.byme-item.is-done .avatar-pic {
+  opacity: 0.6;
+}
+
+.byme-empty {
+  padding: var(--space-8) var(--space-2);
+  font-size: 13px;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .byme-item.is-celebrating,
+  .task-celebrate-badge {
+    animation: none;
+  }
+}

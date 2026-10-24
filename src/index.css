@@ -94,3 +94,13 @@ ul {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Minimalist icons everywhere: one thin line weight for every Lucide icon.
+   Ticks stay a touch bolder so they read on coloured backgrounds. */
+svg.lucide {
+  stroke-width: 1.5;
+}
+
+svg.lucide-check {
+  stroke-width: 2;
+}

@@ -49,15 +49,14 @@ export function formatLongDate(date) {
   return longDateFormat.format(new Date(date))
 }
 
-/** "Today", "Tomorrow", "Yesterday", "Thursday" (within a week) or "Thu, 30 Oct". */
+/** "Today", "Yesterday", a day name within a week ("Sunday"), or "Thu, 30 Oct". */
 export function formatRelativeDay(date, now) {
   const d = startOfDay(date)
   const today = startOfDay(now)
   const diff = Math.round((d - today) / (24 * 60 * MINUTE))
   if (diff === 0) return 'Today'
-  if (diff === 1) return 'Tomorrow'
   if (diff === -1) return 'Yesterday'
-  if (diff > 1 && diff < 7) return weekdayFormat.format(d)
+  if (diff >= 1 && diff < 7) return weekdayFormat.format(d)
   return shortDateFormat.format(d)
 }
 
@@ -126,4 +125,13 @@ export function formatTimeAgo(date, now) {
   if (isSameDay(date, now)) return `${Math.floor(minutes / 60)} hr ago`
   if (isSameDay(date, addDays(now, -1))) return 'Yesterday'
   return shortDateFormat.format(new Date(date))
+}
+
+/** How far away a due time is: "in 45 min", "in 3 hr", "in 2 days", or "1 hr overdue". */
+export function formatDueIn(date, now) {
+  const minutes = Math.round((new Date(date) - new Date(now)) / MINUTE)
+  const span = Math.abs(minutes)
+  const text =
+    span < 60 ? `${Math.max(1, span)} min` : span < 24 * 60 ? `${Math.round(span / 60)} hr` : `${Math.round(span / (24 * 60))} days`
+  return minutes >= 0 ? `in ${text.replace(/^1 days$/, '1 day')}` : `${text.replace(/^1 days$/, '1 day')} overdue`
 }

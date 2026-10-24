@@ -1,4 +1,5 @@
 import { CURRENT_USER_ID } from '../data/people.js'
+import { categorize } from './categories.js'
 
 /**
  * Task record shape (stored as plain JSON):
@@ -15,10 +16,11 @@ import { CURRENT_USER_ID } from '../data/people.js'
  *   flexible: boolean,            // true = may be suggested for rescheduling
  *   status: 'open' | 'done',
  *   progress: 'not-started' | 'in-progress',  // how far the assignee has got while open
- *   acceptance: 'pending' | 'accepted',     // tasks from someone else start as a request
+ *   acceptance: 'pending' | 'accepted' | 'declined', // tasks from someone else start as a request
+ *   repeat: 'none' | 'daily' | 'weekly' | 'monthly',
+ *   category: 'reminders' | 'shopping' | 'work' | 'bills',
+ *   subtasks: [{ id, title, done }], // smaller steps; ticked off by the assignee
  *   acceptedAt: ISO string | null,
-| 'in-progress',  // how far the assignee has got while open
-| 'done',
  *   completedAt: ISO string | null,
  *   createdAt: ISO string,
  * }
@@ -40,7 +42,6 @@ export const REMINDERS = [
   { value: '1d', label: '1 day before', offsetMinutes: 24 * 60 },
 ]
 
-export const ESTIMATES = [null, 10, 15, 30, 45, 60, 90, 120, 180]
 
 function newId() {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID()
@@ -64,10 +65,23 @@ export function makeTask(fields) {
     progress: 'not-started',
     acceptance: 'accepted',
     acceptedAt: null,
+    repeat: 'none',
     completedAt: null,
     createdAt: now,
+    subtasks: [],
     ...fields,
+    category: fields.category ?? categorize(fields.title),
   }
+}
+
+export function makeSubtask(title, done = false) {
+  return { id: newId(), title, done }
+}
+
+/** { done, total } for a task's subtasks (total 0 when it has none). */
+export function subtaskCount(task) {
+  const list = task.subtasks ?? []
+  return { done: list.filter((s) => s.done).length, total: list.length }
 }
 
 export function priorityLabel(priority) {
@@ -80,6 +94,7 @@ export function reminderLabel(reminder) {
 
 export const PROGRESS = {
   pending: { label: 'Awaiting acceptance' },
+  declined: { label: 'Declined' },
   'not-started': { label: 'Not started' },
   'in-progress': { label: 'In progress' },
   done: { label: 'Done' },
@@ -88,6 +103,34 @@ export const PROGRESS = {
 /** Where a task stands: done once completed, waiting until accepted, otherwise what the assignee reported. */
 export function getProgress(task) {
   if (task.status === 'done') return 'done'
+  if (task.acceptance === 'declined') return 'declined'
   if (task.acceptance === 'pending') return 'pending'
   return task.progress === 'in-progress' ? 'in-progress' : 'not-started'
+}
+
+export const REPEATS = [
+  { value: 'none', label: 'Does not repeat' },
+  { value: 'daily', label: 'Every day' },
+  { value: 'weekly', label: 'Every week' },
+  { value: 'monthly', label: 'Every month' },
+]
+
+export function repeatLabel(repeat) {
+  return REPEATS.find((r) => r.value === repeat)?.label ?? 'Does not repeat'
+}
+
+/** The next due date for a repeating task, or null if it doesn't repeat. */
+export function nextOccurrence(task) {
+  const due = new Date(task.dueAt)
+  if (task.repeat === 'daily') due.setDate(due.getDate() + 1)
+  else if (task.repeat === 'weekly') due.setDate(due.getDate() + 7)
+  else if (task.repeat === 'monthly') {
+    // Same day next month, clamped so the 31st becomes the 30th (or 28th/29th), not the 1st.
+    const day = due.getDate()
+    due.setDate(1)
+    due.setMonth(due.getMonth() + 1)
+    const lastDay = new Date(due.getFullYear(), due.getMonth() + 1, 0).getDate()
+    due.setDate(Math.min(day, lastDay))
+  } else return null
+  return due
 }

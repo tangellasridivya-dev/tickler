@@ -5,7 +5,7 @@
   max-width: 720px;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: var(--space-3) var(--space-4) var(--space-8);
+  padding: calc(var(--space-3) + env(safe-area-inset-top)) 10px var(--space-8);
 }
 
 .notifications:focus {
@@ -24,31 +24,11 @@
 }
 
 .notifications__title {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
-}
-
-/* Sections */
-.notif-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.notif-section__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.notif-section__title {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 28px;
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   font-weight: var(--weight-semibold);
-  letter-spacing: 0;
 }
 
 .notif-count {
@@ -65,112 +45,162 @@
   font-weight: var(--weight-semibold);
 }
 
-.notif-list {
+/* ---------- Date groups, Instagram-style: Today, Yesterday, This week, Earlier ---------- */
+.req-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.req-group__title {
+  margin: 0;
+  padding: 0 var(--space-2);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  color: var(--color-text-secondary);
+}
+
+.req-list {
+  display: flex;
+  flex-direction: column;
   margin: 0;
   padding: 0;
   list-style: none;
   border-top: 1px solid var(--color-border);
 }
 
-/* Rows */
-.notif-row {
+/* ---------- Request row: a plain list, set apart by lines, not boxes ---------- */
+.req-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
-  padding: 10px var(--space-1);
+  padding: var(--space-3) var(--space-1);
   border-bottom: 1px solid var(--color-border);
 }
 
-.notif-row__body {
+.req-row__body {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   min-width: 0;
 }
 
-.notif-row__line {
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 14px;
+.req-row__line {
+  font-size: 12px;
+  font-weight: var(--weight-regular);
+  line-height: 16px;
   color: var(--color-text-secondary);
 }
 
-.notif-row__line strong {
-  font-weight: var(--weight-semibold);
+.req-row__name {
   color: var(--color-text);
 }
 
-.notif-row__task {
+.req-row__task {
+  display: -webkit-box;
   padding: 0;
   overflow: hidden;
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-text);
-  font-size: 12px;
+  font-size: var(--text-base);
   font-weight: var(--weight-medium);
-  line-height: 16px;
+  line-height: 20px;
   text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
-.notif-row__task:hover {
+.req-row__task:hover {
   color: var(--color-primary);
 }
 
-.notif-row__task:focus-visible {
+.req-row__task:focus-visible {
   outline: 2px solid var(--color-text);
   outline-offset: 2px;
 }
 
-.notif-row__meta {
+/* Flag, due day and due time — all small, like the task lists elsewhere. */
+.req-row__meta {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 1px;
   font-size: 11px;
   line-height: 14px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
 }
 
-.notif-row__meta--overdue {
-  color: var(--color-error-text);
+.req-row__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* The one action that matters — the app's own teal, not a generic green. */
+.req-row__accept {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  margin-top: 4px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-brand-bg, var(--color-primary));
+  color: var(--color-on-primary, #ffffff);
+  font-size: 13px;
   font-weight: var(--weight-semibold);
 }
 
-.notif-row__icon {
+.req-row__accept:hover {
+  background: var(--color-primary-hover);
+}
+
+.req-row__accept:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* Nothing to do here — a quiet status line instead of a button, one colour
+   either way: accepted or declined both just mean this row no longer needs you. */
+.req-row__status {
   display: inline-flex;
-  flex-shrink: 0;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-full);
+  gap: 5px;
+  margin-top: 2px;
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+}
+
+/* Ask once to allow reminder alerts */
+.reminder-permission {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--radius-lg);
   background: var(--color-primary-subtle);
   color: var(--color-primary);
 }
 
-.accept-btn {
-  flex-shrink: 0;
-  min-height: 28px;
-  padding: 0 var(--space-3);
+.reminder-permission p {
+  flex: 1;
+  font-size: 12px;
+  color: var(--color-text);
 }
 
-.accepted-badge {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: var(--weight-semibold);
-  color: var(--color-success-text);
-}
-
-.unread-dot {
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background: var(--color-primary);
+.reminder-permission--blocked {
+  border-color: var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+  font-size: 12px;
 }

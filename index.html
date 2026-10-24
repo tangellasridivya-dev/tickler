@@ -6,8 +6,18 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#faf9f8" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1f1f1f" media="(prefers-color-scheme: dark)" />
+    <!-- Matches the soft teal wash behind the top bar (tokens.css --top-gradient),
+         not the flat page background, so the OS status bar blends into the header
+         instead of showing as a differently-coloured strip above it. This is what
+         Android (and a regular Safari tab) use. -->
+    <meta name="theme-color" content="#e3f1ef" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1b2e2b" media="(prefers-color-scheme: dark)" />
+    <!-- iOS ignores theme-color once the app is added to the home screen — it only
+         looks at this pair. "black-translucent" makes the status bar an overlay, so
+         the gradient (not a solid colour) shows through it, same as a regular tab.
+         HomePage.css pads content below it with env(safe-area-inset-top). -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="description" content="Your personal and family task assistant." />
     <title>Tickler</title>
   </head>

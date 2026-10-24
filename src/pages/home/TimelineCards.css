@@ -1,0 +1,156 @@
+/* ---------- To me, card layout (MyGate-style feed) ---------- */
+.task-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0 0 var(--space-1);
+  list-style: none;
+}
+
+/* The swipe row itself stays plain; the card inside carries the look. */
+.task-card-row {
+  border-bottom: none;
+}
+
+.task-card-row.is-swiping .swipe__content {
+  background: transparent;
+}
+
+.task-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.task-card.is-celebrating {
+  animation: task-celebrate-flash 700ms ease-out;
+}
+
+/* Picture, name and meta on the left; the checkbox pinned top-right. */
+.task-card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) 0;
+}
+
+.task-card__who {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.task-card__name {
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  line-height: 16px;
+  color: var(--color-text);
+  /* Never clipped — the whole name shows, wrapping onto a second line rather
+     than being cut off, if it's ever long enough to need it. */
+  overflow-wrap: anywhere;
+}
+
+.task-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--color-text-tertiary);
+}
+
+.task-card__meta .task-time {
+  font-size: 11px;
+}
+
+/* The rest of the card: opens the task. A div, not a button, so the subtask
+   pill inside it can be its own real, independently-tappable button. */
+.task-card__body {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3);
+  cursor: pointer;
+}
+
+.task-card__body:hover .task-card__desc {
+  color: var(--color-primary);
+}
+
+.task-card__body:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: -2px;
+}
+
+.task-card__desc {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: var(--weight-regular);
+  line-height: 20px;
+  color: var(--color-text);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.task-card.is-done .task-card__desc {
+  color: var(--color-text-tertiary);
+  text-decoration: line-through;
+}
+
+/* The subtask pill sits right under the description. */
+.task-card__body .subtask-toggle {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+}
+
+/* The open subtask list, still inside the card's own background/border-radius
+   (not a separate block floating below it), set apart by a top line. */
+.task-card__subtasks {
+  margin: 0;
+  padding: var(--space-3) var(--space-3) var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---------- Checkbox, top right ---------- */
+.task-card__check {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.task-card__check input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+}
+
+.task-card__box {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid var(--color-border-strong, var(--color-text-tertiary));
+  border-radius: var(--radius-full);
+  color: #ffffff;
+}
+
+.task-card.is-done .task-card__box {
+  border-color: var(--color-success);
+  background: var(--color-success);
+}
+
+.task-card__check input:focus-visible + .task-card__box {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}

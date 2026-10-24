@@ -10,6 +10,15 @@ import { isMyWork, isOpen } from './selectors.js'
 export const DEFAULT_DAY_END_HOUR = 21
 
 const PRIORITY_RANK = { normal: 0, high: 1 }
+const weekdayName = new Intl.DateTimeFormat(undefined, { weekday: 'long' })
+
+/** Compact durations for the banner: "45m", "2h", "2h 50m". */
+function shortDuration(minutes) {
+  const h = Math.floor(minutes / 60)
+  const m = Math.round(minutes % 60)
+  if (!h) return `${m}m`
+  return m ? `${h}h ${m}m` : `${h}h`
+}
 
 /**
  * A task can be proposed for moving only if the user created it for themselves,
@@ -74,7 +83,8 @@ export function proposedDate(task, now) {
  * {
  *   key,                        stable id used to remember "Not now"
  *   kind: 'reschedule' | 'heads-up',
- *   noticed, why, recommendation,   plain-language explanation
+ *   headline, action,           the two short lines shown on Home
+ *   noticed, why, recommendation,   the full explanation
  *   changes: [{ task, from, to }],  proposed moves (reschedule only)
  *   atRiskTask,
  *   basis,                      how the suggestion was worked out
@@ -129,10 +139,16 @@ export function buildSuggestion(tasks, now, { dayEndHour = DEFAULT_DAY_END_HOUR 
     .filter(Boolean)
     .join(' ')
 
+  // The two lines the Home banner shows: what's wrong, then what would help.
+  const shortBy = crunch.cappedByDayEnd ? `before ${formatTime(dayEnd)}` : `by ${formatTime(crunch.deadline)}`
+  const headline = `Tight day: ${shortDuration(crunch.demand)} of tasks due ${shortBy}, only ${shortDuration(crunch.capacity)} left`
+
   if (moved.length === 0) {
     return {
       key: `${now.toDateString()}|heads-up|${atRisk.id}`,
       kind: 'heads-up',
+      headline,
+      action: `“${atRisk.title}” may slip. Start it soon or ask for help.`,
       noticed,
       why,
       recommendation:
@@ -145,15 +161,23 @@ export function buildSuggestion(tasks, now, { dayEndHour = DEFAULT_DAY_END_HOUR 
 
   const freed = moved.reduce((sum, t) => sum + t.estimateMinutes, 0)
   const what = moved.length === 1 ? `“${moved[0].title}”` : `${moved.length} flexible tasks`
+  const changes = moved.map((task) => ({ task, from: new Date(task.dueAt), to: proposedDate(task, now) }))
+  const toDay = weekdayName.format(changes[0].to)
+  const action =
+    moved.length === 1
+      ? `Move ${what} (${shortDuration(freed)}, flexible) to ${toDay}?`
+      : `Move ${what} (${shortDuration(freed)}) to ${toDay}?`
   return {
     key: `${now.toDateString()}|reschedule|${atRisk.id}|${moved.map((t) => t.id).sort().join(',')}`,
     kind: 'reschedule',
+    headline,
+    action,
     noticed,
     why,
     recommendation:
       `You could move ${what} to tomorrow to free up ${formatDuration(freed)}.` +
       (current ? ' Your day will still be tight, but this helps.' : ''),
-    changes: moved.map((task) => ({ task, from: new Date(task.dueAt), to: proposedDate(task, now) })),
+    changes,
     atRiskTask: atRisk,
     basis,
   }

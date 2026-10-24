@@ -14,6 +14,14 @@ function reducer(state, action) {
       return { ...state, status: 'error', error: action.error }
     case 'add':
       return { ...state, tasks: [...state.tasks, action.task] }
+    case 'add-many': {
+      const ids = new Set(action.tasks.map((t) => t.id))
+      return { ...state, tasks: [...state.tasks.filter((t) => !ids.has(t.id)), ...action.tasks] }
+    }
+    case 'remove': {
+      const ids = new Set(action.ids)
+      return { ...state, tasks: state.tasks.filter((t) => !ids.has(t.id)) }
+    }
     case 'patch': {
       const byId = new Map(action.patches.map((p) => [p.id, p]))
       return {
@@ -78,13 +86,34 @@ export function TasksProvider({ children }) {
     return task
   }, [])
 
+  /** Removes tasks right away; puts them back if saving fails. Returns the removed records. */
+  const deleteTasks = useCallback(
+    async (ids) => {
+      const removed = state.tasks.filter((t) => ids.includes(t.id))
+      dispatch({ type: 'remove', ids })
+      try {
+        await repository.deleteTasks(ids)
+      } catch (error) {
+        dispatch({ type: 'add-many', tasks: removed })
+        throw error
+      }
+      return removed
+    },
+    [state.tasks],
+  )
+
+  const restoreTasks = useCallback(async (records) => {
+    dispatch({ type: 'add-many', tasks: records })
+    await repository.restoreTasks(records)
+  }, [])
+
   const resetDemoData = useCallback(async () => {
     dispatch({ type: 'load-success', tasks: await repository.resetDemoData() })
   }, [])
 
   const value = useMemo(
-    () => ({ ...state, reload: load, setCompleted, patchTasks, createTask, resetDemoData }),
-    [state, load, setCompleted, patchTasks, createTask, resetDemoData],
+    () => ({ ...state, reload: load, setCompleted, patchTasks, createTask, deleteTasks, restoreTasks, resetDemoData }),
+    [state, load, setCompleted, patchTasks, createTask, deleteTasks, restoreTasks, resetDemoData],
   )
 
   return <TasksContext.Provider value={value}>{children}</TasksContext.Provider>

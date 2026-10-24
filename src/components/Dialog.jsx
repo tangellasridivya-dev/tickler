@@ -5,9 +5,10 @@ import './Dialog.css'
 /**
  * Modal dialog built on the native <dialog> element, which provides focus
  * trapping, Escape handling and an accessible modal role for free.
- * Content is only mounted while open, so forms reset each time.
+ * Content is only mounted while open, so forms reset each time. `lead` renders
+ * above the title (e.g. who a task is from); `className` lets a dialog restyle itself.
  */
-function Dialog({ open, onClose, title, description, children, footer, as = 'div', onSubmit }) {
+function Dialog({ open, onClose, title, description, lead, className = '', children, footer, as = 'div', onSubmit }) {
   const ref = useRef(null)
   const titleId = useId()
   const descriptionId = useId()
@@ -28,7 +29,7 @@ function Dialog({ open, onClose, title, description, children, footer, as = 'div
   return (
     <dialog
       ref={ref}
-      className="dialog"
+      className={`dialog ${className}`}
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
       onCancel={(event) => {
@@ -43,7 +44,8 @@ function Dialog({ open, onClose, title, description, children, footer, as = 'div
       {open && (
         <Body className="dialog__panel" onSubmit={onSubmit} noValidate={as === 'form' || undefined}>
           <div className="dialog__header">
-            <div>
+            <div className="dialog__heading">
+              {lead}
               <h2 id={titleId} className="dialog__title">
                 {title}
               </h2>

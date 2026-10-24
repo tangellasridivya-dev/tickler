@@ -13,8 +13,8 @@ export default defineConfig({
         name: 'Tickler',
         short_name: 'Tickler',
         description: 'Your personal and family task assistant.',
-        theme_color: '#0f6cbd',
-        background_color: '#faf9f8',
+        theme_color: '#0b7d73',
+        background_color: '#f6faf9',
         display: 'standalone',
         start_url: '/',
         scope: '/',
@@ -30,7 +30,7 @@ export default defineConfig({
         // Keep profile photos available offline once they have been seen.
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/randomuser\.me\/api\/portraits\//,
+            urlPattern: /^https:\/\/images\.unsplash\.com\/photo-/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'profile-photos',
@@ -40,8 +40,10 @@ export default defineConfig({
           },
         ],
       },
+      // No service worker in development: it rebuilt on every edit and kept
+      // showing "A new version is available". Production builds still get it.
       devOptions: {
-        enabled: true,
+        enabled: false,
       },
     }),
   ],
