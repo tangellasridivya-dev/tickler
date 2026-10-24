@@ -12,9 +12,9 @@ export default defineConfig({
       manifest: {
         name: 'Tickler',
         short_name: 'Tickler',
-        description: 'Tickler',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        description: 'Your personal and family task assistant.',
+        theme_color: '#0f6cbd',
+        background_color: '#faf9f8',
         display: 'standalone',
         start_url: '/',
         scope: '/',
@@ -27,6 +27,18 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // Keep profile photos available offline once they have been seen.
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/randomuser\.me\/api\/portraits\//,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'profile-photos',
+              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
       devOptions: {
         enabled: true,

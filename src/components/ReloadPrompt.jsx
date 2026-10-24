@@ -16,14 +16,20 @@ function ReloadPrompt() {
   if (!offlineReady && !needRefresh) return null
 
   return (
-    <div className="reload-prompt" role="alert">
+    <div className="reload-prompt" role="status">
       <span>
-        {offlineReady ? 'App ready to work offline.' : 'New version available.'}
+        {offlineReady ? 'Tickler is ready to work offline.' : 'A new version of Tickler is available.'}
       </span>
-      {needRefresh && (
-        <button onClick={() => updateServiceWorker(true)}>Reload</button>
-      )}
-      <button onClick={close}>Close</button>
+      <span className="reload-prompt__actions">
+        {needRefresh && (
+          <button type="button" className="btn btn--primary btn--sm" onClick={() => updateServiceWorker(true)}>
+            Reload
+          </button>
+        )}
+        <button type="button" className="btn btn--ghost btn--sm" onClick={close}>
+          {needRefresh ? 'Later' : 'OK'}
+        </button>
+      </span>
     </div>
   )
 }

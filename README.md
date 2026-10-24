@@ -1,16 +1,71 @@
-# React + Vite
+# Tickler
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A personal and family task assistant, built as a React + Vite PWA.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm run dev      # start the dev server
+npm test         # run unit tests (Vitest)
+npm run lint     # lint with oxlint
+npm run build    # production build with service worker
+```
 
-## React Compiler
+On Windows PowerShell, use `npm.cmd` if script execution is disabled.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Structure
 
-## Expanding the Oxlint configuration
+- `src/domain/` – task model, selectors (summary counts, sorting, filters,
+  reminders) and the rule-based suggestion engine. Pure functions, unit tested.
+- `src/data/` – people, sample data and the task repository (localStorage today,
+  async so it can be swapped for an API).
+- `src/state/` – task store, toasts and app-wide dialogs.
+- `src/pages/home/` – the Home page: greeting, progress line, All / To me / By me
+  filters and the date board.
+- `src/styles/tokens.css` – Fluent-style design tokens for the light and dark themes.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Filters
+
+- **To me**: tasks you are responsible for, including ones you made for yourself.
+- **By me**: tasks you assigned to other people.
+
+## How the numbers are defined
+
+Only tasks you are responsible for count.
+
+- **Left to do**: open tasks due today or earlier (includes overdue).
+- **Done today**: tasks completed today, whenever they were due.
+- **Overdue**: open tasks whose due time has passed.
+- **Progress**: done today ÷ (left to do + done today).
+
+## Suggestions
+
+Tickler checks whether the estimated time of today's tasks fits before each
+deadline and before your day ends (9:00 PM by default). If not, it suggests moving
+flexible, non-high-priority tasks you created yourself to tomorrow. It never
+moves tasks from other people or firm deadlines, and nothing changes until you
+apply it.
+
+## Testing states in development
+
+Add a query string to the dev URL:
+
+- `?simulate=load-error` – tasks fail to load
+- `?simulate=save-error` – creating or updating a task fails
+- `?simulate=empty` – a brand-new user with no tasks
+
+To restore the sample data, clear the site's storage in your browser.
+
+## People and photos
+
+The household and circle live in `src/data/people.js`. Profile pictures are free
+placeholder portraits from [randomuser.me](https://randomuser.me); replace each
+`photo` with a real picture URL (or a file in `public/`). They are cached for
+offline use once seen, and coloured initials show if a photo can't load.
+
+## Task requests and notifications
+
+A task someone gives you starts as a request (`acceptance: 'pending'`). It stays
+off your Home board, counts and reminders until you accept it on the
+Notifications page (the bell). Tasks you give others show "Awaiting acceptance"
+under By me until they accept. The app follows the device's light/dark setting.

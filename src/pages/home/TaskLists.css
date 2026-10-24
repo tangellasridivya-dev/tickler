@@ -1,0 +1,237 @@
+/* ---------- Shared task pieces ---------- */
+.task-title {
+  display: -webkit-box;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: var(--weight-medium);
+  line-height: 16px;
+  text-align: left;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.task-title:hover {
+  color: var(--color-primary);
+}
+
+.task-title:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.is-done .task-title {
+  color: var(--color-text-tertiary);
+  text-decoration: line-through;
+}
+
+.task-time {
+  flex-shrink: 0;
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.task-time--overdue {
+  color: var(--color-error-text);
+  font-weight: var(--weight-semibold);
+}
+
+.task-time--done {
+  color: var(--color-text-tertiary);
+  font-weight: var(--weight-regular);
+}
+
+.priority-flag {
+  display: inline-flex;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.priority-flag--high {
+  color: var(--color-priority-high);
+}
+
+.priority-flag--normal {
+  color: var(--color-priority-normal);
+}
+
+.is-done .priority-flag {
+  color: var(--color-text-tertiary);
+}
+
+/* Tick box */
+.task-check {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Larger invisible hit area for touch. */
+.task-check input {
+  position: absolute;
+  inset: -10px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.task-check__circle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  color: transparent;
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.task-check:hover .task-check__circle {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.task-check input:checked + .task-check__circle {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.task-check input:focus-visible + .task-check__circle {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.task-check__circle--theirs {
+  border-style: dashed;
+  border-color: var(--color-text-tertiary);
+}
+
+.task-check__circle--theirs.is-done {
+  border-style: solid;
+  background: var(--color-text-tertiary);
+  color: var(--color-surface);
+}
+
+/* ---------- To me: picture, "Name – task", flag, checkbox ---------- */
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 7px var(--space-1);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.timeline__from {
+  font-weight: 300;
+  color: var(--color-text-secondary);
+}
+
+.timeline__sep {
+  color: var(--color-text-tertiary);
+}
+
+.timeline__item.is-done .avatar-pic {
+  opacity: 0.6;
+}
+
+/* ---------- By me: grouped by person ---------- */
+.person-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.person-group__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 2px;
+  padding: 0 var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-regular);
+  letter-spacing: 0;
+}
+
+.person-group__name {
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
+
+.person-group__count {
+  color: var(--color-text-secondary);
+}
+
+.person-group__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.person-group__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: 8px var(--space-1) 8px 34px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.person-group__item .priority-flag {
+  margin-top: 4px;
+}
+
+
+/* By me: progress instead of a checkbox */
+.progress-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px 1px 6px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.progress-badge--not-started {
+  background: var(--color-surface-pressed);
+  color: var(--color-text-secondary);
+}
+
+.progress-badge--in-progress {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.progress-badge--done {
+  background: var(--color-success-subtle);
+  color: var(--color-success-text);
+}
+
+.progress-badge--pending {
+  background: var(--color-warning-subtle);
+  color: var(--color-warning-text);
+}
