@@ -106,7 +106,7 @@
 .byme-row__title {
   display: -webkit-box;
   overflow: hidden;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: var(--weight-medium);
   line-height: 18px;
   overflow-wrap: anywhere;

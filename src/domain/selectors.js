@@ -1,6 +1,6 @@
 // Pure functions that derive everything the UI shows from the task list.
 // Nothing here touches React or storage, so it is easy to test.
-import { CURRENT_USER_ID, getPerson } from '../data/people.js'
+import { CURRENT_USER_ID, firstName, getPerson } from '../data/people.js'
 import { addDays, endOfDay, isSameDay, MINUTE, startOfDay } from '../lib/dates.js'
 import { REMINDERS } from './task.js'
 import { CATEGORIES, categoryOf } from './categories.js'
@@ -35,14 +35,22 @@ export function getOwnership(task) {
     if (task.createdBy === CURRENT_USER_ID) {
       return { kind: 'personal', label: 'Personal', description: 'You created this for yourself' }
     }
-    const from = getPerson(task.createdBy).name
-    return { kind: 'assigned-to-me', label: `From ${from}`, description: `${from} assigned this to you` }
+    const from = getPerson(task.createdBy)
+    return {
+      kind: 'assigned-to-me',
+      label: `From ${firstName(from)}`,
+      description: `${from.name} assigned this to you`,
+    }
   }
-  const to = getPerson(task.assigneeId).name
+  const to = getPerson(task.assigneeId)
   if (isDelegated(task)) {
-    return { kind: 'delegated', label: `For ${to}`, description: `You assigned this to ${to}` }
+    return {
+      kind: 'delegated',
+      label: `For ${firstName(to)}`,
+      description: `You assigned this to ${to.name}`,
+    }
   }
-  return { kind: 'other', label: to, description: `${to} is responsible for this` }
+  return { kind: 'other', label: firstName(to), description: `${to.name} is responsible for this` }
 }
 
 const PRIORITY_RANK = { high: 0, normal: 1 }

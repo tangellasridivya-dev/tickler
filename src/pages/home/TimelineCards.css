@@ -46,11 +46,13 @@
   min-width: 0;
 }
 
+/* As quiet as the time and date beside it — the picture does the recognising,
+   and the description is what should carry the card. */
 .task-card__name {
   font-size: 12px;
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-regular);
   line-height: 16px;
-  color: var(--color-text);
+  color: var(--color-text-tertiary);
   /* Never clipped — the whole name shows, wrapping onto a second line rather
      than being cut off, if it's ever long enough to need it. */
   overflow-wrap: anywhere;
@@ -91,9 +93,9 @@
   display: -webkit-box;
   overflow: hidden;
   overflow-wrap: anywhere;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: var(--weight-regular);
-  line-height: 20px;
+  line-height: 21px;
   color: var(--color-text);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
@@ -138,8 +140,8 @@
 .task-card__box {
   display: inline-grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border: 1.5px solid var(--color-border-strong, var(--color-text-tertiary));
   border-radius: var(--radius-full);
   color: #ffffff;

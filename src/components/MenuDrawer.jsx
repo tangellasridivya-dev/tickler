@@ -1,9 +1,12 @@
-import { useEffect, useRef } from 'react'
-import { Plus, UserRound, Users, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Monitor, Moon, Plus, Sun, UserRound, Users, X } from 'lucide-react'
 import Avatar from './Avatar.jsx'
 import { CURRENT_USER_ID, PEOPLE, currentUser } from '../data/people.js'
 import { hrefFor } from '../lib/router.js'
+import { THEMES, readTheme, saveTheme } from '../lib/theme.js'
 import './MenuDrawer.css'
+
+const THEME_ICONS = { system: Monitor, light: Sun, dark: Moon }
 
 /**
  * Side menu opened from the top bar. Built on <dialog> for focus trapping and
@@ -12,6 +15,7 @@ import './MenuDrawer.css'
  */
 function MenuDrawer({ open, onClose, path, mineCount }) {
   const ref = useRef(null)
+  const [theme, setTheme] = useState(readTheme)
 
   useEffect(() => {
     const dialog = ref.current
@@ -74,6 +78,34 @@ function MenuDrawer({ open, onClose, path, mineCount }) {
               ))}
             </ul>
           </nav>
+
+          <div className="theme-switch">
+            <span className="theme-switch__label" id="theme-switch-label">
+              Appearance
+            </span>
+            <div className="theme-switch__options" role="radiogroup" aria-labelledby="theme-switch-label">
+              {THEMES.map(({ id, label }) => {
+                const Icon = THEME_ICONS[id]
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    role="radio"
+                    aria-checked={theme === id}
+                    className={`theme-switch__option${theme === id ? ' is-on' : ''}`}
+                    onClick={() => {
+                      setTheme(id)
+                      saveTheme(id)
+                    }}
+                  >
+                    <Icon size={15} aria-hidden="true" />
+                    {label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           <p className="drawer__foot">Tickler · tasks for you and your family</p>
         </div>
       )}

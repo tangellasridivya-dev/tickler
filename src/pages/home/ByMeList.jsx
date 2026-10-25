@@ -1,7 +1,7 @@
 import { useId, useState } from 'react'
 import { BellRing, Check } from 'lucide-react'
 import Avatar from '../../components/Avatar.jsx'
-import { getPerson } from '../../data/people.js'
+import { firstName, getPerson } from '../../data/people.js'
 import { PROGRESS, getProgress } from '../../domain/task.js'
 import { formatTime, isSameDay } from '../../lib/dates.js'
 import { sendReminder } from '../../lib/sendReminder.js'
@@ -72,7 +72,7 @@ function ByMeRow({ task, now, inMultiDay, onOpen, onRemind }) {
           )}
           <span className="byme-row__meta">
             <PriorityFlag task={task} />
-            <span>{person.name}</span>
+            <span>{firstName(person)}</span>
             <span aria-hidden="true">·</span>
             <time dateTime={task.dueAt}>{when}</time>
             <span aria-hidden="true">·</span>
@@ -99,11 +99,11 @@ function ByMeRow({ task, now, inMultiDay, onOpen, onRemind }) {
 }
 
 /** "By me": the shared day sections, each holding the tasks you gave other people. */
-function ByMeList({ columns, now, onOpen, emptyText = 'You haven’t given anyone a task yet. Use + to assign one.' }) {
+function ByMeList({ columns, now, onOpen, tools, emptyText = 'You haven’t given anyone a task yet. Add one below.' }) {
   const toast = useToast()
 
   return (
-    <DaySections columns={columns} now={now} emptyText={emptyText}>
+    <DaySections columns={columns} now={now} emptyText={emptyText} tools={tools}>
       {(column) => (
         <ul className="byme-section__list">
           {column.tasks.map((task) => (

@@ -1,4 +1,4 @@
-import { currentUser, getPerson } from '../data/people.js'
+import { currentUser, firstName, getPerson } from '../data/people.js'
 import { formatDateTime } from './dates.js'
 
 /**
@@ -8,7 +8,7 @@ import { formatDateTime } from './dates.js'
  */
 export async function sendReminder(task, now, toast) {
   const person = getPerson(task.assigneeId)
-  const text = `Hi ${person.name}, a gentle reminder: “${task.title}” is due ${formatDateTime(task.dueAt, now).toLowerCase()}. – ${currentUser().name}`
+  const text = `Hi ${firstName(person)}, a gentle reminder: “${task.title}” is due ${formatDateTime(task.dueAt, now).toLowerCase()}. – ${currentUser().name}`
   if (navigator.share) {
     try {
       await navigator.share({ title: 'Tickler reminder', text })
@@ -19,7 +19,7 @@ export async function sendReminder(task, now, toast) {
   }
   try {
     await navigator.clipboard.writeText(text)
-    toast.show({ message: `Reminder for ${person.name} copied. Paste it in WhatsApp or SMS.` })
+    toast.show({ message: `Reminder for ${firstName(person)} copied. Paste it in WhatsApp or SMS.` })
   } catch {
     // No sharing or clipboard: open WhatsApp with the message ready; the user picks the contact.
     const opened = window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener')

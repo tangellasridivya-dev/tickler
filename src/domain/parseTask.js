@@ -33,6 +33,8 @@ function personAliases() {
   for (const p of PEOPLE) {
     if (p.id === CURRENT_USER_ID) continue
     aliases.push([p.name.toLowerCase(), p.id])
+    const first = p.name.split(' ')[0].toLowerCase()
+    if (first !== p.name.toLowerCase()) aliases.push([first, p.id])
     const relation = p.relation.toLowerCase()
     aliases.push([`my ${relation}`, p.id])
     // Bare relation words are only safe for parents ("ask mom to…"); "friend" alone is too vague.

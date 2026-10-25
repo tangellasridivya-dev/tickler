@@ -10,9 +10,9 @@
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--color-text);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: var(--weight-medium);
-  line-height: 18px;
+  line-height: 19px;
   text-align: left;
   overflow-wrap: anywhere;
   -webkit-box-orient: vertical;

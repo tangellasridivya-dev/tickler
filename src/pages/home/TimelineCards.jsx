@@ -40,7 +40,7 @@ function TaskCard({ task, now, onToggle, onOpen, onToggleSubtask }) {
               aria-label={done ? 'Mark as not done' : 'Mark as done'}
             />
             <span className="task-card__box" aria-hidden="true">
-              {done && <Check size={13} strokeWidth={3} />}
+              {done && <Check size={16} strokeWidth={3} />}
             </span>
           </label>
         </div>

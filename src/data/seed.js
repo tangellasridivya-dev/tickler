@@ -89,7 +89,7 @@ export function createSeedTasks(now = new Date()) {
     }),
     makeTask({
       title: 'Book Lakshmi’s dentist appointment', notes: 'Dr. Reddy’s clinic, Madhapur. Prefer a Saturday morning slot; her number is on the clinic card.',
-      createdBy: 'karthik',
+      createdBy: 'padma',
       ...accepted(180, 170),
       dueAt: today(120),
       estimateMinutes: 10,
@@ -113,7 +113,7 @@ export function createSeedTasks(now = new Date()) {
     makeTask({ title: 'Clean out the fridge', notes: 'Throw out old chutneys and leftovers; wipe the vegetable tray.', dueAt: today(360), estimateMinutes: 90, flexible: true }),
     makeTask({
       title: 'Drop the silk saree at the tailor',
-      createdBy: 'padma',
+      createdBy: 'lakshmi',
       ...accepted(240, 230),
       dueAt: today(140),
       notes: 'Blouse stitching for the pink Kanchipuram saree. Lakshmi Tailors, near the temple; measurements are with them.',
@@ -162,7 +162,7 @@ export function createSeedTasks(now = new Date()) {
     }),
     makeTask({
       title: 'Pick up Dad’s medicines from the pharmacy', notes: 'BP tablets and vitamin D, 1-month supply from Apollo Pharmacy. Prescription photo is on WhatsApp.',
-      createdBy: 'venkat',
+      createdBy: 'padma',
       dueAt: day(2, 12),
       ...request(120),
     }),
@@ -176,7 +176,7 @@ export function createSeedTasks(now = new Date()) {
     // Assigned by me to others
     makeTask({ title: 'Collect the birthday cake from the bakery', notes: '1 kg chocolate truffle from Karachi Bakery, already paid. Order number 4521.', createdBy: me, assigneeId: 'arjun', dueAt: today(180) }),
     makeTask({ title: 'Book train tickets for the Diwali trip', notes: 'Hyderabad to Vijayawada, 3AC for 4 people. Book on IRCTC as soon as tatkal opens.', createdBy: me, assigneeId: 'lakshmi', dueAt: today(240), progress: 'in-progress' }),
-    makeTask({ title: 'Feed the cat', notes: 'Half a cup of dry food and fresh water.', createdBy: me, assigneeId: 'lakshmi', dueAt: today(-120), ...doneToday(-130) }),
+    makeTask({ title: 'Feed the cat', notes: 'Half a cup of dry food and fresh water.', createdBy: me, assigneeId: 'karthik', dueAt: today(-120), ...doneToday(-130) }),
     makeTask({ title: 'Send the photos from Sunday’s get-together', notes: 'Share the Google Photos album link in the family group.', createdBy: me, assigneeId: 'priya', dueAt: today(270), progress: 'in-progress' }),
     makeTask({ title: 'Buy a birthday gift for Priya', notes: 'She mentioned wanting a handloom saree or a good book. Budget about ₹2,500.', createdBy: me, assigneeId: 'karthik', dueAt: day(1, 17), progress: 'in-progress' }),
     makeTask({ title: 'Take the car for servicing', notes: 'Maruti service centre, Kukatpally. 20,000 km service; also check the AC.', createdBy: me, assigneeId: 'venkat', dueAt: day(1, 9) }),

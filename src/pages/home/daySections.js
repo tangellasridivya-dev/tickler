@@ -3,9 +3,10 @@
 import { isOpen } from '../../domain/selectors.js'
 import { isSameDay } from '../../lib/dates.js'
 
-const dayLabel = new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'short' })
+const weekdayLabel = new Intl.DateTimeFormat(undefined, { weekday: 'long' })
+const dateLabel = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short' })
 
-/** "Today", "Tomorrow", "Yesterday", or "Monday, 26 Oct". */
+/** "Today", "Tomorrow", "Yesterday", or the weekday. */
 export function sectionTitle(column, now) {
   if (column.kind === 'later') return 'Later'
   const days = Math.round(
@@ -14,7 +15,12 @@ export function sectionTitle(column, now) {
   if (days === 0) return 'Today'
   if (days === 1) return 'Tomorrow'
   if (days === -1) return 'Yesterday'
-  return dayLabel.format(column.date)
+  return weekdayLabel.format(column.date)
+}
+
+/** The date beside the heading — "26 Oct". "Later" spans days, so it has none. */
+export function sectionDate(column) {
+  return column.kind === 'later' ? null : dateLabel.format(column.date)
 }
 
 /**

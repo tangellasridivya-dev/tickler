@@ -3,7 +3,7 @@ import { ArrowLeft, CalendarClock, CircleAlert, Flag, Repeat, Sparkles, X } from
 import Avatar from '../../components/Avatar.jsx'
 import CategoryPicker from '../../components/CategoryPicker.jsx'
 import SubtaskEditor from '../../components/SubtaskEditor.jsx'
-import { CURRENT_USER_ID, PEOPLE, getPerson } from '../../data/people.js'
+import { CURRENT_USER_ID, PEOPLE, firstName, getPerson } from '../../data/people.js'
 import { categorize } from '../../domain/categories.js'
 import { parseTask } from '../../domain/parseTask.js'
 import { repeatLabel } from '../../domain/task.js'
@@ -199,7 +199,7 @@ function NewTaskPage({ params }) {
                   onClick={() => setManual((m) => ({ ...m, assigneeId: p.id }))}
                 >
                   <Avatar personId={p.id} size={32} label={p.id === CURRENT_USER_ID ? 'You' : p.name} />
-                  <span>{p.id === CURRENT_USER_ID ? 'You' : p.name}</span>
+                  <span>{p.id === CURRENT_USER_ID ? 'You' : firstName(p)}</span>
                 </button>
               )
             })}

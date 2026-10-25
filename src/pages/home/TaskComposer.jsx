@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
-import { ArrowUp, CalendarClock, Flag, Plus, Repeat, X } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowUp, CalendarClock, Flag, Mic, Plus, Repeat, X } from 'lucide-react'
 import Avatar from '../../components/Avatar.jsx'
 import CategoryIcon from '../../components/CategoryIcon.jsx'
-import { CURRENT_USER_ID, getPerson } from '../../data/people.js'
+import { CURRENT_USER_ID, firstName, getPerson } from '../../data/people.js'
 import { CATEGORIES, categorize, categoryLabel } from '../../domain/categories.js'
 import { parseTask } from '../../domain/parseTask.js'
 import { repeatLabel } from '../../domain/task.js'
@@ -12,6 +12,10 @@ import { useTasks, useToast } from '../../state/contexts.js'
 import './TaskComposer.css'
 
 const TITLE_MAX = 120
+
+/** The browser's own speech recognition, where there is one (Chrome, Edge, Safari). */
+const SpeechRecognition =
+  typeof window === 'undefined' ? null : (window.SpeechRecognition ?? window.webkitSpeechRecognition ?? null)
 
 /**
  * The task bar fixed along the bottom of the board — always there to type
@@ -27,6 +31,47 @@ function TaskComposer({ now, personal = false }) {
   const [ignore, setIgnore] = useState({})
   const [sending, setSending] = useState(false)
   const [pickedCategory, setPickedCategory] = useState(null) // set once the chip is tapped
+  const [listening, setListening] = useState(false)
+  const recogniser = useRef(null)
+
+  // Stop the microphone if the board goes away mid-sentence.
+  useEffect(() => () => recogniser.current?.abort(), [])
+
+  /**
+   * Dictate the task instead of typing it. The words land in the same box, so
+   * the sentence reader still picks out who, when and how urgent from them.
+   */
+  const toggleMic = () => {
+    if (listening) {
+      recogniser.current?.stop()
+      return
+    }
+    const recogniser_ = new SpeechRecognition()
+    recogniser_.lang = navigator.language || 'en-IN'
+    recogniser_.interimResults = true
+    recogniser_.onresult = (event) =>
+      setText(
+        Array.from(event.results)
+          .map((result) => result[0].transcript)
+          .join('')
+          .trimStart(),
+      )
+    recogniser_.onend = () => setListening(false)
+    recogniser_.onerror = (event) => {
+      setListening(false)
+      if (event.error === 'aborted' || event.error === 'no-speech') return
+      toast.show({
+        tone: 'error',
+        message:
+          event.error === 'not-allowed'
+            ? 'Microphone access is off for this site.'
+            : 'We couldn’t catch that. Try again.',
+      })
+    }
+    recogniser.current = recogniser_
+    recogniser_.start()
+    setListening(true)
+  }
 
   const parsed = useMemo(() => parseTask(text, now, { ignore }), [text, now, ignore])
   const { detected } = parsed
@@ -65,7 +110,7 @@ function TaskComposer({ now, personal = false }) {
         acceptance: forMe ? 'accepted' : 'pending',
       })
       if (!forMe) {
-        toast.show({ message: `Sent to ${getPerson(assigneeId).name} to accept` })
+        toast.show({ message: `Sent to ${firstName(getPerson(assigneeId))} to accept` })
       } else if (personal) {
         toast.show({ message: `Added for ${formatDateTime(dueAt, now)}` })
       } else {
@@ -89,7 +134,7 @@ function TaskComposer({ now, personal = false }) {
         <div className="composer__chips" aria-live="polite">
           <span className="composer-chip">
             <Avatar personId={assigneeId} size={16} />
-            {forMe ? 'For you' : `For ${getPerson(assigneeId).name}`}
+            {forMe ? 'For you' : `For ${firstName(getPerson(assigneeId))}`}
             {detected.person && !detected.person.self && (
               <button
                 type="button"
@@ -177,11 +222,24 @@ function TaskComposer({ now, personal = false }) {
           className="composer__input"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Add a task…"
+          placeholder={listening ? 'Listening…' : 'e.g. Ask Karthik to buy milk at 6pm'}
           autoComplete="off"
           enterKeyHint="send"
           maxLength={TITLE_MAX + 60}
         />
+        {/* Only offered where the browser can actually hear. */}
+        {SpeechRecognition && (
+          <button
+            type="button"
+            className={`composer__mic${listening ? ' is-listening' : ''}`}
+            onClick={toggleMic}
+            aria-pressed={listening}
+            aria-label={listening ? 'Stop listening' : 'Say the task instead'}
+            title={listening ? 'Stop listening' : 'Say the task instead'}
+          >
+            <Mic size={18} aria-hidden="true" />
+          </button>
+        )}
         <button type="submit" className="composer__send" disabled={!canSend} aria-label="Add task">
           <ArrowUp size={18} strokeWidth={2.5} aria-hidden="true" />
         </button>

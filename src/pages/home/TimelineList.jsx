@@ -1,7 +1,7 @@
 import { useId, useState } from 'react'
 import { Check } from 'lucide-react'
 import Avatar from '../../components/Avatar.jsx'
-import { CURRENT_USER_ID, getPerson } from '../../data/people.js'
+import { CURRENT_USER_ID, firstName, getPerson } from '../../data/people.js'
 import { useCelebrateOnDone } from '../../lib/useCelebrateOnDone.js'
 import SwipeRow from './SwipeRow.jsx'
 import { SubtaskList, SubtaskToggle } from '../../components/Subtasks.jsx'
@@ -39,7 +39,7 @@ function TimelineRow({ task, now, showDay, onToggle, onOpen, onToggleSubtask }) 
           >
             {fromOther && (
               <>
-                <span className="timeline__from">{getPerson(from).name}</span>
+                <span className="timeline__from">{firstName(getPerson(from))}</span>
                 <span className="timeline__sep" aria-hidden="true">
                   {' – '}
                 </span>

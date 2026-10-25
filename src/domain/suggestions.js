@@ -182,3 +182,80 @@ export function buildSuggestion(tasks, now, { dayEndHour = DEFAULT_DAY_END_HOUR 
     basis,
   }
 }
+
+/* ---------- The one line under the progress bar ---------- */
+
+// How Tickler addresses the person using it. One place to change it.
+const ADDRESS = 'Ma’am'
+const SHORT_TITLE = 34
+
+const shortTitle = (task) =>
+  task.title.length > SHORT_TITLE ? `${task.title.slice(0, SHORT_TITLE - 1).trimEnd()}…` : task.title
+
+/**
+ * A single line about where the day stands, picked by what matters most right
+ * now: anything overdue first, then what's urgent and close, then a tight day,
+ * then simply what's next. Returns null only while there is nothing to say.
+ *
+ * { key, text, tone: 'urgent' | 'good' | 'calm', changes? } — `changes` is set
+ * only when the line proposes a move the user can apply.
+ */
+export function buildNudge(tasks, now, options) {
+  const todayEnd = endOfDay(now).getTime()
+  const open = tasks
+    .filter((t) => isMyWork(t) && isOpen(t) && new Date(t.dueAt).getTime() <= todayEnd)
+    .sort((a, b) => new Date(a.dueAt) - new Date(b.dueAt))
+
+  if (open.length === 0) {
+    return { key: `${now.toDateString()}|free`, tone: 'good', text: `${ADDRESS}, you’re free today. Yay!` }
+  }
+
+  const overdue = open.filter((t) => new Date(t.dueAt) < now)
+  const urgent = overdue.find((t) => t.priority === 'high') ?? overdue[0]
+  if (urgent) {
+    return {
+      key: `${now.toDateString()}|overdue|${urgent.id}`,
+      tone: 'urgent',
+      text: `${ADDRESS}, “${shortTitle(urgent)}” was due at ${formatTime(urgent.dueAt)}. Please do it first.`,
+    }
+  }
+
+  const ahead = open.filter((t) => new Date(t.dueAt) >= now)
+  const important = ahead.find((t) => t.priority === 'high')
+  if (important) {
+    const left = minutesBetween(now, new Date(important.dueAt))
+    // Close enough to need doing now, or far enough off to just keep clear.
+    return left <= 120
+      ? {
+          key: `${now.toDateString()}|soon|${important.id}`,
+          tone: 'urgent',
+          text: `${ADDRESS}, please do “${shortTitle(important)}” first — only ${formatDuration(left)} left.`,
+        }
+      : {
+          key: `${now.toDateString()}|important|${important.id}`,
+          tone: 'calm',
+          text: `${ADDRESS}, “${shortTitle(important)}” is important today. Keep ${formatTime(important.dueAt)} free.`,
+        }
+  }
+
+  const crunch = buildSuggestion(tasks, now, options)
+  if (crunch?.kind === 'reschedule') {
+    return {
+      key: crunch.key,
+      tone: 'calm',
+      text: `${ADDRESS}, it’s a tight day. Move “${shortTitle(crunch.changes[0].task)}” to tomorrow?`,
+      changes: crunch.changes,
+    }
+  }
+
+  const next = ahead[0]
+  if (!next) return null
+  return {
+    key: `${now.toDateString()}|next|${next.id}`,
+    tone: 'calm',
+    text:
+      open.length === 1
+        ? `${ADDRESS}, just one left today — “${shortTitle(next)}” at ${formatTime(next.dueAt)}.`
+        : `${ADDRESS}, ${open.length} tasks left. Next is “${shortTitle(next)}” at ${formatTime(next.dueAt)}.`,
+  }
+}

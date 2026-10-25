@@ -50,6 +50,7 @@
 }
 
 .composer__plus,
+.composer__mic,
 .composer__send {
   display: inline-flex;
   flex-shrink: 0;
@@ -88,7 +89,24 @@
   cursor: default;
 }
 
+.composer__mic {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.composer__mic:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+/* While it is listening, so it is obvious the microphone is open. */
+.composer__mic.is-listening {
+  background: var(--color-error-subtle);
+  color: var(--color-error-text);
+}
+
 .composer__plus:focus-visible,
+.composer__mic:focus-visible,
 .composer__send:focus-visible {
   outline: 2px solid var(--color-text);
   outline-offset: 2px;

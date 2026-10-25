@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { CircleAlert, ListChecks, RefreshCw, X } from 'lucide-react'
 import EmptyState from '../../components/EmptyState.jsx'
 import ByMeList from './ByMeList.jsx'
+import { DateJump, FilterMenu } from './BoardTools.jsx'
 import DaySections from './DaySections.jsx'
 import { spansDays } from './daySections.js'
 import TodayBox from './TodayBox.jsx'
@@ -115,6 +116,14 @@ function HomePage({ personal = false }) {
   const filterLabel = BOARD_FILTERS.find((f) => f.id === filter)?.label
   const emptyText = filter === 'all' ? undefined : `Nothing in ${filterLabel}.`
   const ready = status === 'ready' && tasks.length > 0
+  // The board's controls, which ride on the first day heading. By me has no
+  // filtering, so it only gets the date jump.
+  const tools = (
+    <>
+      {!byMe && <FilterMenu value={filter} onChange={setFilter} />}
+      <DateJump now={now} />
+    </>
+  )
 
   let board
   if (status === 'loading') {
@@ -149,16 +158,12 @@ function HomePage({ personal = false }) {
       </div>
     )
   } else if (byMe) {
-    board = <ByMeList columns={columns} now={now} onOpen={openTask} emptyText={emptyText} />
+    board = <ByMeList columns={columns} now={now} onOpen={openTask} emptyText={emptyText} tools={tools} />
   } else {
     // To me reads as a feed of cards; My tasks stays as compact rows.
     const List = personal ? TimelineList : TimelineCards
     board = (
-      <DaySections
-        columns={columns}
-        now={now}
-        emptyText={emptyText ?? 'Nothing here yet.'}
-      >
+      <DaySections columns={columns} now={now} emptyText={emptyText ?? 'Nothing here yet.'} tools={tools}>
         {(column) => (
           <List
             tasks={column.tasks}
@@ -183,14 +188,7 @@ function HomePage({ personal = false }) {
         personal={personal}
       />
       {ready && (
-        <TodayBox
-          tasks={tasks}
-          now={now}
-          onApply={(changes) => rescheduleTasks(changes).catch(() => {})}
-          filter={filter}
-          /* By me has no filtering, so it gets no filter control. */
-          onFilterChange={byMe ? undefined : setFilter}
-        />
+        <TodayBox tasks={tasks} now={now} onApply={(changes) => rescheduleTasks(changes).catch(() => {})} />
       )}
       {ready && !byMe && !tipSeen && (
         <p className="swipe-tip">
