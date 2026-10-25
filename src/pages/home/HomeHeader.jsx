@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react'
-import { Bell, Menu } from 'lucide-react'
+import { Inbox, PanelLeft, Search } from 'lucide-react'
 import ScopeTabs from './ScopeTabs.jsx'
 import MenuDrawer from '../../components/MenuDrawer.jsx'
+import SearchDialog from '../../components/SearchDialog.jsx'
 import { getDaySummary, getTaskRequests } from '../../domain/selectors.js'
 import { hrefFor } from '../../lib/router.js'
 import { useTasks } from '../../state/contexts.js'
 
-/** Bell that opens the Notifications page; the badge counts task requests waiting for you. */
-function NotificationsLink({ now }) {
+/** Opens the Task requests page; the badge counts the ones waiting for you. */
+function RequestsLink({ now }) {
   const { tasks } = useTasks()
   const count = useMemo(() => getTaskRequests(tasks, now).pending.length, [tasks, now])
 
@@ -15,10 +16,10 @@ function NotificationsLink({ now }) {
     <a
       className="icon-btn"
       href={hrefFor('/notifications')}
-      aria-label={count ? `Notifications, ${count} new` : 'Notifications'}
-      title="Notifications"
+      aria-label={count ? `Task requests, ${count} waiting` : 'Task requests'}
+      title="Task requests"
     >
-      <Bell size={20} aria-hidden="true" />
+      <Inbox size={20} aria-hidden="true" />
       {count > 0 && (
         <span className="badge" aria-hidden="true">
           {count > 9 ? '9+' : count}
@@ -28,10 +29,11 @@ function NotificationsLink({ now }) {
   )
 }
 
-/** Top bar: menu on the left, To me / By me centred, day arrows and the bell on the right. */
-function HomeHeader({ now, scope, onScopeChange, showControls, nav, personal }) {
+/** Top bar: menu on the left, To me / By me centred, search and requests on the right. */
+function HomeHeader({ now, scope, onScopeChange, showControls, personal }) {
   const { tasks } = useTasks()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const mineCount = useMemo(() => getDaySummary(tasks, now, 'mine').remaining, [tasks, now])
 
   return (
@@ -45,7 +47,7 @@ function HomeHeader({ now, scope, onScopeChange, showControls, nav, personal }) 
           aria-haspopup="dialog"
           aria-expanded={menuOpen}
         >
-          <Menu size={20} aria-hidden="true" />
+          <PanelLeft size={20} aria-hidden="true" />
         </button>
         <MenuDrawer
           open={menuOpen}
@@ -62,8 +64,18 @@ function HomeHeader({ now, scope, onScopeChange, showControls, nav, personal }) 
         )}
       </div>
       <div className="home-header__actions">
-        {showControls && nav}
-        <NotificationsLink now={now} />
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={() => setSearchOpen(true)}
+          aria-label="Search tasks"
+          aria-haspopup="dialog"
+          aria-expanded={searchOpen}
+        >
+          <Search size={20} aria-hidden="true" />
+        </button>
+        <RequestsLink now={now} />
+        <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} now={now} />
       </div>
     </header>
   )

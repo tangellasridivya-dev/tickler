@@ -1,6 +1,6 @@
 /*
- * Tickler design tokens: the "Tickler Teal" brand (teal primary, coral accent)
- * on a Fluent 2 style base: Segoe UI type ramp, soft neutrals,
+ * Tickler design tokens: the "Indigo & Amber" brand (indigo primary, amber
+ * accent) on a Fluent 2 style base: Segoe UI type ramp, soft neutrals,
  * 4px corners and layered soft shadows. Light is the default; dark applies
  * when the OS prefers it (unless the user picked light) or when the user picks it.
  *
@@ -13,39 +13,39 @@
   color-scheme: light;
 
   /* Brand */
-  --color-primary: #0a7368;          /* brand foreground: links, accents, icons */
-  --color-primary-hover: #085e55;
-  --color-primary-subtle: #e6f4f2;
-  --color-primary-subtle-hover: #cdeae6;
-  --color-primary-border: #a7d9d2;
-  --color-brand-bg: #0b7d73;         /* filled primary buttons */
-  --color-brand-bg-hover: #096a61;
+  --color-primary: #4338ca;          /* brand foreground: links, accents, icons */
+  --color-primary-hover: #3730a3;
+  --color-primary-subtle: #eef0fe;
+  --color-primary-subtle-hover: #e0e3fd;
+  --color-primary-border: #c3c8fa;
+  --color-brand-bg: #4f46e5;         /* filled primary buttons */
+  --color-brand-bg-hover: #4338ca;
   --color-on-primary: #ffffff;
-  --color-accent: #ff7a59;          /* coral: warmth, used sparingly */
+  --color-accent: #f59e0b;          /* amber: warmth, used sparingly */
 
-  /* Neutrals */
-  --color-bg: #f6faf9;
+  /* Neutrals (cool, faintly indigo-tinted) */
+  --color-bg: #f7f7fb;
   --color-surface: #ffffff;
-  --color-surface-muted: #f1f5f4;
-  --color-surface-hover: #f1f5f4;
-  --color-surface-pressed: #dde6e4;
-  --color-text: #1d2725;
-  --color-text-secondary: #5b6966;
-  --color-text-tertiary: #6f7c79;
-  --color-border: #e1e8e6;
-  --color-border-strong: #cfd9d6;
+  --color-surface-muted: #f1f2f8;
+  --color-surface-hover: #f1f2f8;
+  --color-surface-pressed: #e2e4f0;
+  --color-text: #1e1f2c;
+  --color-text-secondary: #5c5f75;
+  --color-text-tertiary: #71748b;
+  --color-border: #e4e5ef;
+  --color-border-strong: #cdcfde;
   --color-overlay: rgba(0, 0, 0, 0.4);
-  --color-inverted-bg: #1d2725;
+  --color-inverted-bg: #1e1f2c;
   --color-inverted-text: #ffffff;
-  --color-inverted-link: #6edccf;
+  --color-inverted-link: #a5b4fc;
 
   /* Status */
-  --color-success: #107c10;
-  --color-success-text: #0e700e;
-  --color-success-subtle: #f1faf1;
-  --color-warning: #bc4b09;
-  --color-warning-text: #bc4b09;
-  --color-warning-subtle: #fff9f5;
+  --color-success: #0f8a4d;
+  --color-success-text: #0b7340;
+  --color-success-subtle: #eefaf3;
+  --color-warning: #b45309;
+  --color-warning-text: #b45309;
+  --color-warning-subtle: #fff8ed;
   --color-error: #d92d20;
   --color-error-text: #b42318;
   --color-error-subtle: #fef3f2;
@@ -109,43 +109,43 @@
   --column-width: 320px;
 
   /* Soft colour wash behind the top of the page */
-  --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(14, 143, 132, 0.16), transparent 60%),
-    radial-gradient(90% 100% at 100% 0%, rgba(255, 122, 89, 0.12), transparent 65%);
+  --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(79, 70, 229, 0.14), transparent 60%),
+    radial-gradient(90% 100% at 100% 0%, rgba(245, 158, 11, 0.12), transparent 65%);
 }
 
 /* Dark theme values, shared by the two selectors below. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(79, 209, 193, 0.16), transparent 60%),
-      radial-gradient(90% 100% at 100% 0%, rgba(255, 122, 89, 0.12), transparent 65%);
-    --color-primary: #4fd1c1;
-    --color-primary-hover: #6edccf;
-    --color-primary-subtle: #0c2f2b;
-    --color-primary-subtle-hover: #124540;
-    --color-primary-border: #175b53;
-    --color-brand-bg: #0b7d73;
-    --color-brand-bg-hover: #0e8f84;
-    --color-bg: #151b1a;
-    --color-surface: #1f2726;
-    --color-surface-muted: #253030;
-    --color-surface-hover: #2a3533;
-    --color-surface-pressed: #34403e;
-    --color-text: #f2f5f4;
-    --color-text-secondary: #c9d2d0;
-    --color-text-tertiary: #9aa6a3;
-    --color-border: #2f3b39;
-    --color-border-strong: #475553;
+    --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(129, 140, 248, 0.16), transparent 60%),
+      radial-gradient(90% 100% at 100% 0%, rgba(245, 158, 11, 0.1), transparent 65%);
+    --color-primary: #a5b4fc;
+    --color-primary-hover: #c7d2fe;
+    --color-primary-subtle: #22213f;
+    --color-primary-subtle-hover: #2e2c55;
+    --color-primary-border: #3b3869;
+    --color-brand-bg: #4f46e5;
+    --color-brand-bg-hover: #6366f1;
+    --color-bg: #15161f;
+    --color-surface: #1d1e2a;
+    --color-surface-muted: #242634;
+    --color-surface-hover: #2a2c3c;
+    --color-surface-pressed: #343750;
+    --color-text: #f3f4f8;
+    --color-text-secondary: #c8cadb;
+    --color-text-tertiary: #9a9db4;
+    --color-border: #2e3042;
+    --color-border-strong: #474a63;
     --color-overlay: rgba(0, 0, 0, 0.5);
-    --color-inverted-bg: #f2f5f4;
-    --color-inverted-text: #1d2725;
-    --color-inverted-link: #0a7368;
-    --color-success: #54b054;
-    --color-success-text: #54b054;
-    --color-success-subtle: #052505;
-    --color-warning: #faa06b;
-    --color-warning-text: #faa06b;
-    --color-warning-subtle: #4a1e04;
+    --color-inverted-bg: #f3f4f8;
+    --color-inverted-text: #1e1f2c;
+    --color-inverted-link: #4338ca;
+    --color-success: #45c07d;
+    --color-success-text: #45c07d;
+    --color-success-subtle: #0a2418;
+    --color-warning: #fbbf24;
+    --color-warning-text: #fbbf24;
+    --color-warning-subtle: #3a2a08;
     --color-error: #f07178;
     --color-error-text: #f07178;
     --color-error-subtle: #3a1416;
@@ -161,35 +161,35 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(79, 209, 193, 0.16), transparent 60%),
-    radial-gradient(90% 100% at 100% 0%, rgba(255, 122, 89, 0.12), transparent 65%);
-  --color-primary: #4fd1c1;
-  --color-primary-hover: #6edccf;
-  --color-primary-subtle: #0c2f2b;
-  --color-primary-subtle-hover: #124540;
-  --color-primary-border: #175b53;
-  --color-brand-bg: #0b7d73;
-  --color-brand-bg-hover: #0e8f84;
-  --color-bg: #151b1a;
-  --color-surface: #1f2726;
-  --color-surface-muted: #253030;
-  --color-surface-hover: #2a3533;
-  --color-surface-pressed: #34403e;
-  --color-text: #f2f5f4;
-  --color-text-secondary: #c9d2d0;
-  --color-text-tertiary: #9aa6a3;
-  --color-border: #2f3b39;
-  --color-border-strong: #475553;
+  --top-gradient: radial-gradient(120% 100% at 0% 0%, rgba(129, 140, 248, 0.16), transparent 60%),
+    radial-gradient(90% 100% at 100% 0%, rgba(245, 158, 11, 0.1), transparent 65%);
+  --color-primary: #a5b4fc;
+  --color-primary-hover: #c7d2fe;
+  --color-primary-subtle: #22213f;
+  --color-primary-subtle-hover: #2e2c55;
+  --color-primary-border: #3b3869;
+  --color-brand-bg: #4f46e5;
+  --color-brand-bg-hover: #6366f1;
+  --color-bg: #15161f;
+  --color-surface: #1d1e2a;
+  --color-surface-muted: #242634;
+  --color-surface-hover: #2a2c3c;
+  --color-surface-pressed: #343750;
+  --color-text: #f3f4f8;
+  --color-text-secondary: #c8cadb;
+  --color-text-tertiary: #9a9db4;
+  --color-border: #2e3042;
+  --color-border-strong: #474a63;
   --color-overlay: rgba(0, 0, 0, 0.5);
-  --color-inverted-bg: #f2f5f4;
-  --color-inverted-text: #1d2725;
-  --color-inverted-link: #0a7368;
-  --color-success: #54b054;
-  --color-success-text: #54b054;
-  --color-success-subtle: #052505;
-  --color-warning: #faa06b;
-  --color-warning-text: #faa06b;
-  --color-warning-subtle: #4a1e04;
+  --color-inverted-bg: #f3f4f8;
+  --color-inverted-text: #1e1f2c;
+  --color-inverted-link: #4338ca;
+  --color-success: #45c07d;
+  --color-success-text: #45c07d;
+  --color-success-subtle: #0a2418;
+  --color-warning: #fbbf24;
+  --color-warning-text: #fbbf24;
+  --color-warning-subtle: #3a2a08;
   --color-error: #f07178;
   --color-error-text: #f07178;
   --color-error-subtle: #3a1416;

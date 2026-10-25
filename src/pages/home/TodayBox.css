@@ -1,0 +1,287 @@
+/* ---------- Today at a glance ---------- */
+.today-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, var(--color-primary-subtle), transparent 62%),
+    var(--color-surface);
+}
+
+.today-box.is-complete {
+  border-color: var(--color-success);
+  background:
+    radial-gradient(120% 140% at 0% 0%, var(--color-success-subtle), transparent 62%),
+    var(--color-surface);
+}
+
+/* The date, with the board's controls on its right. */
+.today-box__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.today-box__day {
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  color: var(--color-text-secondary);
+}
+
+.today-box__tools {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.board-tool {
+  position: relative;
+  display: inline-flex;
+}
+
+.board-tool__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.board-tool__btn:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.board-tool__btn.is-on {
+  border-color: var(--color-primary-border);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+.board-tool__label {
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+}
+
+.board-tool__btn:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* The native picker is driven by the button beside it. */
+.board-tool__date {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.board-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 50;
+  display: flex;
+  min-width: 164px;
+  flex-direction: column;
+  padding: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.board-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 7px var(--space-2);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  font-size: 13px;
+  text-align: left;
+}
+
+.board-menu__item:hover {
+  background: var(--color-surface-hover);
+}
+
+.board-menu__item.is-on {
+  color: var(--color-primary);
+  font-weight: var(--weight-semibold);
+}
+
+.board-menu__item:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: -2px;
+}
+
+.today-box__progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.today-box__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+/* The number carries the strip, so it is the one big thing here. */
+.today-box__count {
+  font-size: 20px;
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 24px;
+  color: var(--color-primary);
+}
+
+.today-box.is-complete .today-box__count {
+  color: var(--color-success-text);
+}
+
+.today-box__standing {
+  flex: 1;
+  font-size: 12px;
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.today-box__streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  align-self: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-warning-subtle);
+  color: var(--color-warning-text);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* One pip per task: progress you can count, not just a length to judge. */
+.today-box__track {
+  display: flex;
+  gap: 3px;
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+}
+
+.today-box__pip {
+  flex: 1;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-pressed);
+  transition: background-color var(--transition-base);
+}
+
+.today-box__pip.is-done {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-brand-bg));
+}
+
+.today-box.is-complete .today-box__pip.is-done {
+  background: var(--color-success);
+}
+
+/* Too many tasks to count as pips: one continuous bar instead. */
+.today-box__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-brand-bg));
+  transition: width var(--transition-base);
+}
+
+/* ---------- The suggestion under it ---------- */
+.today-box__tip {
+  position: relative;
+  display: flex;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.today-box__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+  color: var(--color-accent);
+}
+
+.today-box__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-right: var(--space-5);
+}
+
+.today-box__headline {
+  font-size: 13px;
+  font-weight: var(--weight-semibold);
+  line-height: 18px;
+}
+
+.today-box__action {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-secondary);
+}
+
+.today-box__move {
+  align-self: flex-start;
+  min-height: 28px;
+  margin-top: var(--space-2);
+  padding: 0 var(--space-4);
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+}
+
+.today-box__move:hover {
+  filter: brightness(0.94);
+}
+
+.today-box__move:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.today-box__close {
+  position: absolute;
+  top: var(--space-1);
+  right: calc(-1 * var(--space-1));
+  width: 24px;
+  height: 24px;
+  color: var(--color-text-tertiary);
+}

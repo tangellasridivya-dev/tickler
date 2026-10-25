@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, CircleAlert, ListChecks, RefreshCw, X } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { CircleAlert, ListChecks, RefreshCw, X } from 'lucide-react'
 import EmptyState from '../../components/EmptyState.jsx'
 import ByMeList from './ByMeList.jsx'
-import CategoryTabs from './CategoryTabs.jsx'
-import DateBoard from './DateBoard.jsx'
-import DateStrip from './DateStrip.jsx'
-import SuggestionBanner from './SuggestionBanner.jsx'
+import DaySections from './DaySections.jsx'
+import { spansDays } from './daySections.js'
+import TodayBox from './TodayBox.jsx'
 import HomeHeader from './HomeHeader.jsx'
 import TaskComposer from './TaskComposer.jsx'
+import TimelineCards from './TimelineCards.jsx'
+import TimelineList from './TimelineList.jsx'
 import { BOARD_FILTERS, SCOPES, getBoardColumns, matchesFilter } from '../../domain/selectors.js'
 import { useNow } from '../../state/useNow.js'
 import { useTasks, useUI } from '../../state/contexts.js'
@@ -44,21 +45,14 @@ function readFilter() {
   }
 }
 
-// Distance between the starts of two neighbouring columns (width + gap).
-function columnStep(el) {
-  const cols = el.querySelectorAll('.board-col')
-  if (cols.length > 1) return cols[1].offsetLeft - cols[0].offsetLeft
-  return cols[0]?.offsetWidth || el.clientWidth
-}
-
 function BoardSkeleton() {
   return (
-    <div className="board" aria-busy="true" aria-label="Loading your tasks">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="board-col">
-          <div className="skeleton" style={{ height: 20, width: 120 }} />
-          <div className="skeleton" style={{ height: 64 }} />
-          <div className="skeleton" style={{ height: 64 }} />
+    <div className="day-sections" aria-busy="true" aria-label="Loading your tasks">
+      {[0, 1].map((i) => (
+        <div key={i} className="day-section">
+          <div className="skeleton" style={{ height: 14, width: 90 }} />
+          <div className="skeleton" style={{ height: 96 }} />
+          <div className="skeleton" style={{ height: 96 }} />
         </div>
       ))}
     </div>
@@ -67,7 +61,8 @@ function BoardSkeleton() {
 
 /**
  * The Home board (tasks from others, and tasks you gave others) or, with
- * `personal`, the My tasks board (tasks you made for yourself).
+ * `personal`, the My tasks board (tasks you made for yourself). Every board
+ * reads as one page scrolling down through the days.
  */
 function HomePage({ personal = false }) {
   const { status, tasks, reload } = useTasks()
@@ -77,8 +72,6 @@ function HomePage({ personal = false }) {
   const [savedScope, setScopeState] = useState(readScope)
   const scope = personal ? 'mine' : savedScope
   const byMe = scope === 'by-me'
-  const boardRef = useRef(null)
-  const [edges, setEdges] = useState({ start: true, end: false })
   const [tipSeen, setTipSeen] = useState(() => readFlag(SWIPE_TIP_KEY))
   const [filter, setFilterState] = useState(readFilter)
 
@@ -120,64 +113,8 @@ function HomePage({ personal = false }) {
     [tasks, now, scope, filter],
   )
   const filterLabel = BOARD_FILTERS.find((f) => f.id === filter)?.label
-
-  // Which days are on screen (one on phones, two or three on wider screens).
-  // The first one is where a task typed without a day lands.
-  const [visibleIndex, setVisibleIndex] = useState(0)
-  const [visibleCount, setVisibleCount] = useState(1)
-  const visibleDay = columns[visibleIndex]?.date ?? null
-
-  const updateEdges = useCallback(() => {
-    const el = boardRef.current
-    if (!el) return
-    setEdges({ start: el.scrollLeft <= 1, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 1 })
-    const step = columnStep(el)
-    setVisibleIndex(step ? Math.round(el.scrollLeft / step) : 0)
-    setVisibleCount(step ? Math.max(1, Math.round(el.clientWidth / step)) : 1)
-  }, [])
-
-  const jumpTo = (index) => {
-    const el = boardRef.current
-    const column = el?.querySelectorAll('.board-col')[index]
-    if (column) el.scrollTo({ left: column.offsetLeft - el.offsetLeft, behavior: 'smooth' })
-  }
-
-  // Open on Today when the board first appears or the switch or filter
-  // changes, not on every task update. If a filter leaves today empty, open on
-  // the next day that has something (or the latest earlier one, for Overdue).
+  const emptyText = filter === 'all' ? undefined : `Nothing in ${filterLabel}.`
   const ready = status === 'ready' && tasks.length > 0
-  const columnsRef = useRef(columns)
-  // Runs before the effect below, so it always sees the latest columns.
-  useEffect(() => {
-    columnsRef.current = columns
-  })
-  useEffect(() => {
-    const el = boardRef.current
-    if (!el) return
-    const cols = columnsRef.current
-    const todayIndex = cols.findIndex((c) => c.kind === 'today')
-    let index = todayIndex
-    if (filter !== 'all' && cols[todayIndex]?.tasks.length === 0) {
-      const after = cols.findIndex((c, i) => i > todayIndex && c.tasks.length > 0)
-      const before = cols.findLastIndex((c, i) => i < todayIndex && c.tasks.length > 0)
-      index = after >= 0 ? after : before >= 0 ? before : todayIndex
-    }
-    const target = el.querySelectorAll('.board-col')[index]
-    if (target) el.scrollLeft = target.offsetLeft - el.offsetLeft
-    updateEdges()
-  }, [ready, scope, filter, updateEdges])
-
-  useEffect(() => {
-    updateEdges()
-    window.addEventListener('resize', updateEdges)
-    return () => window.removeEventListener('resize', updateEdges)
-  }, [updateEdges, columns, status])
-
-  const scrollBoard = (direction) => {
-    const el = boardRef.current
-    if (!el) return
-    el.scrollBy({ left: direction * columnStep(el), behavior: 'smooth' })
-  }
 
   let board
   if (status === 'loading') {
@@ -212,27 +149,27 @@ function HomePage({ personal = false }) {
       </div>
     )
   } else if (byMe) {
-    // By me is a plain vertical list grouped by day, without the sideways calendar.
-    board = (
-      <ByMeList
-        columns={columns}
-        now={now}
-        onOpen={openTask}
-        emptyText={filter === 'all' ? undefined : `Nothing in ${filterLabel}.`}
-      />
-    )
+    board = <ByMeList columns={columns} now={now} onOpen={openTask} emptyText={emptyText} />
   } else {
+    // To me reads as a feed of cards; My tasks stays as compact rows.
+    const List = personal ? TimelineList : TimelineCards
     board = (
-      <DateBoard
-        ref={boardRef}
+      <DaySections
         columns={columns}
         now={now}
-        onToggle={onToggle}
-        onOpen={openTask}
-        onToggleSubtask={toggleSubtask}
-        onScroll={updateEdges}
-        cards={scope === 'to-me'}
-      />
+        emptyText={emptyText ?? 'Nothing here yet.'}
+      >
+        {(column) => (
+          <List
+            tasks={column.tasks}
+            now={now}
+            showDay={spansDays(column)}
+            onToggle={onToggle}
+            onOpen={openTask}
+            onToggleSubtask={toggleSubtask}
+          />
+        )}
+      </DaySections>
     )
   }
 
@@ -244,45 +181,18 @@ function HomePage({ personal = false }) {
         onScopeChange={setScope}
         showControls={ready}
         personal={personal}
-        nav={
-          !byMe && (
-          <span className="board-nav">
-            <button
-              type="button"
-              className="icon-btn"
-              aria-label="Earlier dates"
-              disabled={edges.start}
-              onClick={() => scrollBoard(-1)}
-            >
-              <ChevronLeft size={20} aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="icon-btn"
-              aria-label="Later dates"
-              disabled={edges.end}
-              onClick={() => scrollBoard(1)}
-            >
-              <ChevronRight size={20} aria-hidden="true" />
-            </button>
-          </span>
-          )
-        }
       />
-      {ready && !byMe && (
-        <DateStrip
-          columns={columns}
+      {ready && (
+        <TodayBox
+          tasks={tasks}
           now={now}
-          firstVisible={visibleIndex}
-          visibleCount={visibleCount}
-          onSelect={jumpTo}
+          onApply={(changes) => rescheduleTasks(changes).catch(() => {})}
+          filter={filter}
+          /* By me has no filtering, so it gets no filter control. */
+          onFilterChange={byMe ? undefined : setFilter}
         />
       )}
-      {ready && !byMe && <CategoryTabs value={filter} onChange={setFilter} />}
-      {ready && personal && (
-        <SuggestionBanner tasks={tasks} now={now} onApply={(changes) => rescheduleTasks(changes).catch(() => {})} />
-      )}
-      {ready && scope !== 'by-me' && !tipSeen && (
+      {ready && !byMe && !tipSeen && (
         <p className="swipe-tip">
           Swipe a task right to mark it done
           <button type="button" className="swipe-tip__close" onClick={dismissTip} aria-label="Dismiss tip">
@@ -291,7 +201,7 @@ function HomePage({ personal = false }) {
         </p>
       )}
       {board}
-      {status === 'ready' && <TaskComposer now={now} day={visibleDay} personal={personal} />}
+      {status === 'ready' && <TaskComposer now={now} personal={personal} />}
     </main>
   )
 }

@@ -8,7 +8,7 @@ export const CURRENT_USER_ID = 'me'
 const portrait = (id) => `https://images.unsplash.com/photo-${id}?w=128&h=128&fit=crop&crop=faces&q=80`
 
 export const PEOPLE = [
-  { id: CURRENT_USER_ID, name: 'Sridivya', relation: 'Me', color: '#0b7d73', photo: portrait('1706943262459-3ef6ce03305c') },
+  { id: CURRENT_USER_ID, name: 'Sridivya', relation: 'Me', color: '#4f46e5', photo: portrait('1706943262459-3ef6ce03305c') },
   { id: 'karthik', name: 'Karthik', relation: 'Husband', color: '#c239b3', photo: portrait('1757744705465-ea08b0ddc38a') },
   { id: 'arjun', name: 'Arjun', relation: 'Brother', color: '#038387', photo: portrait('1625241152315-4a698f74ceb7') },
   { id: 'lakshmi', name: 'Lakshmi', relation: 'Sister', color: '#ca5010', photo: portrait('1618245472177-2a74ad3b994a') },

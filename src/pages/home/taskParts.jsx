@@ -1,7 +1,11 @@
 // Small pieces shared by the task layouts on the Home board.
-import { Flag, Repeat } from 'lucide-react'
+import { CalendarDays, Clock, Flag, Repeat } from 'lucide-react'
 import { isOverdue } from '../../domain/selectors.js'
-import { formatTime, isSameDay } from '../../lib/dates.js'
+import { priorityLabel } from '../../domain/task.js'
+import { formatRelativeDay, formatTime, isSameDay } from '../../lib/dates.js'
+// Styles for these pieces and for the rows they sit in; every list that shows
+// a task pulls them in through here.
+import './TaskLists.css'
 
 const weekday = new Intl.DateTimeFormat(undefined, { weekday: 'short' })
 const shortDate = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short' })
@@ -43,6 +47,36 @@ export function PriorityFlag({ task, className = '' }) {
     >
       <Flag size={11} fill="currentColor" strokeWidth={2.25} aria-hidden="true" />
     </span>
+  )
+}
+
+/** Priority as a flag and the word, for rows with space to say it outright. */
+export function PriorityTag({ task }) {
+  const high = task.priority === 'high'
+  return (
+    <span className={`priority-tag priority-tag--${high ? 'high' : 'normal'}`}>
+      <Flag size={11} fill="currentColor" strokeWidth={2.25} aria-hidden="true" />
+      {priorityLabel(task.priority)}
+    </span>
+  )
+}
+
+/** Due time, and the day it falls on, each behind its own icon. */
+export function DueParts({ task, now }) {
+  const overdue = isOverdue(task, now)
+  return (
+    <>
+      <span className="meta-part">
+        <Clock size={11} aria-hidden="true" />
+        {formatTime(task.dueAt)}
+      </span>
+      <span aria-hidden="true">·</span>
+      <span className={`meta-part${overdue ? ' is-overdue' : ''}`}>
+        <CalendarDays size={11} aria-hidden="true" />
+        {overdue && <span className="visually-hidden">Overdue, due </span>}
+        {formatRelativeDay(task.dueAt, now)}
+      </span>
+    </>
   )
 }
 

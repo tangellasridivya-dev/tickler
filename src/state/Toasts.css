@@ -1,7 +1,7 @@
 .toasts {
   position: fixed;
   left: 50%;
-  bottom: var(--space-6);
+  bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
   z-index: 200;
   display: flex;
   flex-direction: column;
@@ -11,6 +11,11 @@
   max-width: calc(100vw - 2 * var(--space-4));
   transform: translateX(-50%);
   pointer-events: none;
+}
+
+/* On the boards, sit above the task bar instead of on top of it. */
+body:has(.composer) .toasts {
+  bottom: calc(var(--space-4) + 60px + env(safe-area-inset-bottom));
 }
 
 .toast {

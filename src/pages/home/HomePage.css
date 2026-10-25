@@ -45,12 +45,6 @@
   color: var(--color-text);
 }
 
-.board-nav {
-  display: flex;
-  gap: var(--space-1);
-  margin-right: var(--space-2);
-}
-
 .icon-btn:disabled {
   opacity: 0.4;
   cursor: default;
@@ -58,45 +52,6 @@
 
 .icon-btn:disabled:hover {
   background: transparent;
-}
-
-/* ---------- Board ---------- */
-.board {
-  display: flex;
-  flex: 1;
-  align-items: flex-start;
-  /* One full-width day on phones, two or three side by side on wider screens. */
-  gap: 0;
-  padding-bottom: var(--space-2);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border-strong) transparent;
-}
-
-.board:focus-visible {
-  outline: 2px solid var(--color-text);
-  outline-offset: -2px;
-}
-
-.board-col {
-  /* Contains absolutely positioned children (e.g. screen-reader-only labels) so
-     off-screen columns can't widen the page. */
-  position: relative;
-  display: flex;
-  flex: 0 0 100%;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-
-.board-col__empty {
-  padding: var(--space-3) var(--space-2);
-  font-size: var(--text-xs);
-  color: var(--color-text-tertiary);
 }
 
 /* ---------- Responsive ---------- */
@@ -107,10 +62,6 @@
 
   .home--personal {
     padding-left: 0;
-  }
-
-  .board-nav {
-    display: none;
   }
 }
 
@@ -227,188 +178,6 @@
   align-items: center;
   gap: var(--space-2);
   justify-self: start;
-}
-
-/* ---------- Multi-day layout on wider screens ---------- */
-@media (min-width: 768px) {
-  .board {
-    gap: var(--space-6);
-  }
-
-  .board-col {
-    flex-basis: calc((100% - var(--space-6)) / 2);
-  }
-}
-
-@media (min-width: 1100px) {
-  .board-col {
-    flex-basis: calc((100% - 2 * var(--space-6)) / 3);
-  }
-}
-
-/* ---------- Date strip ---------- */
-.date-strip {
-  display: flex;
-  gap: var(--space-1);
-  margin: 0 calc(-1 * var(--space-1));
-  padding: 2px var(--space-1);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.date-strip::-webkit-scrollbar {
-  display: none;
-}
-
-.date-chip {
-  position: relative;
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  height: 42px;
-  padding: 0 var(--space-2);
-  border: 1px solid transparent;
-  border-radius: var(--radius-lg);
-  background: transparent;
-  color: var(--color-text-secondary);
-  transition: background-color var(--transition-fast), color var(--transition-fast);
-}
-
-.date-chip:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
-}
-
-.date-chip__top {
-  font-size: 11px;
-  line-height: 13px;
-}
-
-.date-chip__day {
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
-  line-height: 18px;
-  color: var(--color-text);
-}
-
-.date-chip.is-active {
-  border-color: var(--color-primary-border);
-  background: var(--color-primary-subtle);
-  color: var(--color-primary);
-}
-
-.date-chip.is-active .date-chip__day {
-  color: var(--color-primary);
-}
-
-/* A past day with unfinished tasks */
-.date-chip.has-overdue .date-chip__top {
-  font-weight: var(--weight-semibold);
-  color: var(--color-error-text);
-}
-
-.date-chip.has-overdue .date-chip__dot {
-  background: var(--color-error);
-}
-
-.date-chip--past:not(.has-overdue):not(.is-active) {
-  opacity: 0.7;
-}
-
-.date-chip__dot {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 5px;
-  height: 5px;
-  border-radius: var(--radius-full);
-  background: var(--color-accent);
-}
-
-.date-chip:focus-visible {
-  outline: 2px solid var(--color-text);
-  outline-offset: -2px;
-}
-
-/* ---------- Tickler's suggestion: a small insight card, not a system banner ---------- */
-.suggestion-banner {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-1) var(--space-3);
-  padding: var(--space-4);
-  border: 1px solid var(--color-accent-border, var(--color-primary-border));
-  border-radius: var(--radius-lg);
-  background:
-    radial-gradient(140% 100% at 0% 0%, var(--color-accent-subtle, var(--color-primary-subtle)), transparent 70%),
-    var(--color-surface);
-}
-
-.suggestion-banner__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-full);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-xs);
-  color: var(--color-accent);
-}
-
-.suggestion-banner__body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  padding-right: var(--space-5);
-}
-
-.suggestion-banner__headline {
-  font-size: 13px;
-  font-weight: var(--weight-semibold);
-  line-height: 18px;
-}
-
-.suggestion-banner__action {
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--color-text-secondary);
-}
-
-.suggestion-banner__move {
-  grid-column: 2;
-  justify-self: start;
-  min-height: 30px;
-  padding: 0 var(--space-4);
-  border: none;
-  border-radius: var(--radius-full);
-  background: var(--color-accent);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: var(--weight-semibold);
-}
-
-.suggestion-banner__move:hover {
-  background: var(--color-accent-hover, var(--color-accent));
-  filter: brightness(0.94);
-}
-
-.suggestion-banner__move:focus-visible {
-  outline: 2px solid var(--color-text);
-  outline-offset: 2px;
-}
-
-.suggestion-banner__close {
-  position: absolute;
-  top: var(--space-2);
-  right: var(--space-2);
-  width: 26px;
-  height: 26px;
-  color: var(--color-text-tertiary);
 }
 
 /* Page title in the top bar (My tasks) */

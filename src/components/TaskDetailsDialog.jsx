@@ -15,6 +15,7 @@ import {
   StickyNote,
   Trash2,
 } from 'lucide-react'
+import Attachments from './Attachments.jsx'
 import Avatar from './Avatar.jsx'
 import CategoryIcon from './CategoryIcon.jsx'
 import CategoryPicker from './CategoryPicker.jsx'
@@ -319,6 +320,8 @@ function TaskDetailsCard({ task, onClose }) {
               />
             </section>
           )}
+
+          <Attachments task={task} className="attachments--large" />
 
           {task.notes && (
             <div className="details-notes">

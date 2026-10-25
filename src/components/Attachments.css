@@ -1,0 +1,25 @@
+/* ---------- Pictures attached to a task ---------- */
+.attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.attachments__shot {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-muted);
+  object-fit: cover;
+}
+
+/* In the task card there is room for larger ones. */
+.attachments--large .attachments__shot {
+  width: 96px;
+  height: 96px;
+}
+
+.is-done .attachments__shot {
+  opacity: 0.6;
+}

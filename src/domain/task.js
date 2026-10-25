@@ -20,6 +20,7 @@ import { categorize } from './categories.js'
  *   repeat: 'none' | 'daily' | 'weekly' | 'monthly',
  *   category: 'reminders' | 'shopping' | 'work' | 'bills',
  *   subtasks: [{ id, title, done }], // smaller steps; ticked off by the assignee
+ *   attachments: [{ id, url, alt }],  // pictures shown under the description
  *   acceptedAt: ISO string | null,
  *   completedAt: ISO string | null,
  *   createdAt: ISO string,
@@ -69,6 +70,7 @@ export function makeTask(fields) {
     completedAt: null,
     createdAt: now,
     subtasks: [],
+    attachments: [],
     ...fields,
     category: fields.category ?? categorize(fields.title),
   }

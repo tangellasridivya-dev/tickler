@@ -16,6 +16,27 @@ const DEMO_SUBTASKS = {
   'Take the car for servicing': [['Book the service slot'], ['Ask them to check the AC']],
 }
 
+// Pictures that came with a task, keyed by title. Unsplash again, same as the
+// portraits in people.js.
+const shot = (id) => `https://images.unsplash.com/photo-${id}?w=400&h=400&fit=crop&q=70`
+const DEMO_ATTACHMENTS = {
+  'Drop the silk saree at the tailor': [
+    { id: 'a1', url: shot('1610030469983-98e550d6193c'), alt: 'Photo attached to the task' },
+    { id: 'a2', url: shot('1595341888016-a392ef81b7de'), alt: 'Photo attached to the task' },
+  ],
+  'Collect the birthday cake from the bakery': [
+    { id: 'a3', url: shot('1578985545062-69928b1d9587'), alt: 'Photo attached to the task' },
+  ],
+  'Take the car for servicing': [
+    { id: 'a4', url: shot('1486262715619-67b85e0b08d3'), alt: 'Photo attached to the task' },
+  ],
+}
+
+/** Demo pictures for a sample task's title (empty for anything else). */
+export function demoAttachments(title) {
+  return DEMO_ATTACHMENTS[title] ?? []
+}
+
 /** Demo subtasks for a sample task's title (empty for anything else). */
 export function demoSubtasks(title) {
   return (DEMO_SUBTASKS[title] ?? []).map(([text, done]) => makeSubtask(text, !!done))
@@ -168,5 +189,9 @@ export function createSeedTasks(now = new Date()) {
       acceptance: 'declined',
     }),
   ]
-  return tasks.map((task) => ({ ...task, subtasks: demoSubtasks(task.title) }))
+  return tasks.map((task) => ({
+    ...task,
+    subtasks: demoSubtasks(task.title),
+    attachments: demoAttachments(task.title),
+  }))
 }

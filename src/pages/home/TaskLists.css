@@ -83,6 +83,44 @@
   color: var(--color-text-tertiary);
 }
 
+/* Priority spelled out, and the time/day parts beside it. */
+.priority-tag {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+  font-weight: var(--weight-semibold);
+}
+
+.priority-tag--high {
+  color: var(--color-priority-high);
+}
+
+.priority-tag--normal {
+  color: var(--color-priority-normal);
+}
+
+.is-done .priority-tag {
+  color: var(--color-text-tertiary);
+}
+
+.meta-part {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.meta-part.is-overdue {
+  color: var(--color-error-text);
+  font-weight: var(--weight-semibold);
+}
+
+.is-done .meta-part.is-overdue {
+  color: var(--color-text-tertiary);
+  font-weight: var(--weight-regular);
+}
+
 /* ---------- To me: picture, "Name – task", flag, checkbox ---------- */
 .timeline {
   margin: 0;

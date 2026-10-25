@@ -1,6 +1,6 @@
 // Persistence for tasks. Today this is the browser's localStorage; the async
 // interface means it can be swapped for a real API without touching the UI.
-import { createSeedTasks, demoSubtasks } from './seed.js'
+import { createSeedTasks, demoAttachments, demoSubtasks } from './seed.js'
 import { categoryOf } from '../domain/categories.js'
 import { makeTask, normalizePriority } from '../domain/task.js'
 
@@ -32,6 +32,7 @@ export function upgradeRecord(task) {
     category: categoryOf(task),
     // Records from before subtasks existed: sample tasks get their demo steps once.
     subtasks: task.subtasks ?? demoSubtasks(task.title),
+    attachments: task.attachments ?? demoAttachments(task.title),
   }
 }
 

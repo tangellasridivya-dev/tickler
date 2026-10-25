@@ -2,39 +2,16 @@ import { useId, useState } from 'react'
 import { BellRing, Check } from 'lucide-react'
 import Avatar from '../../components/Avatar.jsx'
 import { getPerson } from '../../data/people.js'
-import { isOpen } from '../../domain/selectors.js'
 import { PROGRESS, getProgress } from '../../domain/task.js'
 import { formatTime, isSameDay } from '../../lib/dates.js'
 import { sendReminder } from '../../lib/sendReminder.js'
 import { useCelebrateOnDone } from '../../lib/useCelebrateOnDone.js'
 import { useToast } from '../../state/contexts.js'
 import { SubtaskList, SubtaskToggle } from '../../components/Subtasks.jsx'
+import DaySections from './DaySections.jsx'
+import { spansDays } from './daySections.js'
 import { PriorityFlag, RepeatIcon } from './taskParts.jsx'
 import './ByMeList.css'
-
-const dayLabel = new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'short' })
-
-/** "Today", "Tomorrow", "Yesterday", or "Monday, 26 Oct". */
-function sectionTitle(column, now) {
-  if (column.kind === 'later') return 'Later'
-  const days = Math.round(
-    (new Date(column.date).setHours(0, 0, 0, 0) - new Date(now).setHours(0, 0, 0, 0)) / 86_400_000,
-  )
-  if (days === 0) return 'Today'
-  if (days === 1) return 'Tomorrow'
-  if (days === -1) return 'Yesterday'
-  return dayLabel.format(column.date)
-}
-
-/**
- * Which day sections to show: today and every later day that has tasks, plus
- * earlier days only if something there is still unfinished. Empty days are skipped.
- */
-function visibleSections(columns) {
-  return columns
-    .map((column) => (column.kind === 'past' ? { ...column, tasks: column.tasks.filter(isOpen) } : column))
-    .filter((column) => column.tasks.length > 0)
-}
 
 function ByMeRow({ task, now, inMultiDay, onOpen, onRemind }) {
   const person = getPerson(task.assigneeId)
@@ -121,41 +98,27 @@ function ByMeRow({ task, now, inMultiDay, onOpen, onRemind }) {
   )
 }
 
-/** "By me" as a simple vertical list: day sections (Today, Tomorrow, …), each with its tasks. */
+/** "By me": the shared day sections, each holding the tasks you gave other people. */
 function ByMeList({ columns, now, onOpen, emptyText = 'You haven’t given anyone a task yet. Use + to assign one.' }) {
   const toast = useToast()
-  const sections = visibleSections(columns)
-
-  if (sections.length === 0) {
-    return <p className="byme-empty">{emptyText}</p>
-  }
 
   return (
-    <div className="byme">
-      {sections.map((column) => {
-        const title = sectionTitle(column, now)
-        const headingId = `byme-${column.id}`
-        return (
-          <section key={column.id} className="byme-section" aria-labelledby={headingId}>
-            <h2 id={headingId} className={`byme-section__title${title === 'Today' ? ' is-today' : ''}`}>
-              {title}
-            </h2>
-            <ul className="byme-section__list">
-              {column.tasks.map((task) => (
-                <ByMeRow
-                  key={task.id}
-                  task={task}
-                  now={now}
-                  inMultiDay={column.kind === 'later' || column.kind === 'past'}
-                  onOpen={onOpen}
-                  onRemind={(t) => sendReminder(t, now, toast)}
-                />
-              ))}
-            </ul>
-          </section>
-        )
-      })}
-    </div>
+    <DaySections columns={columns} now={now} emptyText={emptyText}>
+      {(column) => (
+        <ul className="byme-section__list">
+          {column.tasks.map((task) => (
+            <ByMeRow
+              key={task.id}
+              task={task}
+              now={now}
+              inMultiDay={spansDays(column)}
+              onOpen={onOpen}
+              onRemind={(t) => sendReminder(t, now, toast)}
+            />
+          ))}
+        </ul>
+      )}
+    </DaySections>
   )
 }
 

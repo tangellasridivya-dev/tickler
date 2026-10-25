@@ -1,0 +1,133 @@
+/* ---------- Day cleared ---------- */
+.celebrate {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  /* A glow rather than a dark scrim: this is a reward, not a modal, and it
+     shouldn't feel like the app has stopped to interrupt you. */
+  background: radial-gradient(60% 45% at 50% 45%, var(--color-primary-subtle), transparent 75%);
+}
+
+.celebrate__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-6) var(--space-8);
+  border-radius: 18px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  /* Scale only, never opacity: a throttled tab (or anything else that doesn't
+     run animations) would otherwise leave an invisible overlay sitting over
+     the app. The motion is the flourish; it is never what makes this visible. */
+  animation: celebrate-card 420ms cubic-bezier(0.2, 1.3, 0.4, 1);
+}
+
+.celebrate__badge {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-success);
+  color: #ffffff;
+  animation: celebrate-badge 520ms cubic-bezier(0.2, 1.4, 0.4, 1) 80ms both;
+}
+
+.celebrate__title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
+
+.celebrate__sub {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+}
+
+.celebrate__streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: var(--space-3);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+}
+
+/* ---------- The burst ---------- */
+.celebrate__burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.celebrate__particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 2px;
+  background: var(--color);
+  opacity: 0;
+  animation-name: celebrate-burst;
+  animation-timing-function: cubic-bezier(0.15, 0.6, 0.35, 1);
+  animation-fill-mode: forwards;
+}
+
+.celebrate__particle.is-round {
+  border-radius: var(--radius-full);
+}
+
+@keyframes celebrate-burst {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(var(--rotate));
+  }
+}
+
+@keyframes celebrate-card {
+  from {
+    transform: scale(0.88);
+  }
+}
+
+@keyframes celebrate-badge {
+  from {
+    transform: scale(0.55);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Everything above is decoration — without motion, the words still land. */
+@media (prefers-reduced-motion: reduce) {
+  .celebrate__card,
+  .celebrate__badge {
+    animation: none;
+  }
+
+  .celebrate__particle {
+    display: none;
+  }
+}

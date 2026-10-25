@@ -1,14 +1,15 @@
 import { useId, useState } from 'react'
 import { Check } from 'lucide-react'
+import Attachments from '../../components/Attachments.jsx'
 import Avatar from '../../components/Avatar.jsx'
 import { SubtaskList, SubtaskToggle } from '../../components/Subtasks.jsx'
 import { getPerson } from '../../data/people.js'
 import { useCelebrateOnDone } from '../../lib/useCelebrateOnDone.js'
 import SwipeRow from './SwipeRow.jsx'
-import { PriorityFlag, TaskTime } from './taskParts.jsx'
+import { DueParts, PriorityTag } from './taskParts.jsx'
 import './TimelineCards.css'
 
-function TaskCard({ task, now, showDay, onToggle, onOpen, onToggleSubtask }) {
+function TaskCard({ task, now, onToggle, onOpen, onToggleSubtask }) {
   const [showSubtasks, setShowSubtasks] = useState(false)
   const listId = useId()
   const from = getPerson(task.createdBy)
@@ -25,9 +26,9 @@ function TaskCard({ task, now, showDay, onToggle, onOpen, onToggleSubtask }) {
           <span className="task-card__who">
             <span className="task-card__name">{from.name}</span>
             <span className="task-card__meta">
-              <PriorityFlag task={task} />
+              <PriorityTag task={task} />
               <span aria-hidden="true">·</span>
-              <TaskTime task={task} now={now} showDay={showDay} />
+              <DueParts task={task} now={now} />
             </span>
           </span>
           {/* A real checkbox, not nested in the open-card button below. */}
@@ -62,6 +63,7 @@ function TaskCard({ task, now, showDay, onToggle, onOpen, onToggleSubtask }) {
             {task.title}
             {done && <span className="visually-hidden"> (done)</span>}
           </span>
+          <Attachments task={task} className="attachments--large" />
           {hasSubtasks && (
             <SubtaskToggle
               task={task}
@@ -86,11 +88,12 @@ function TaskCard({ task, now, showDay, onToggle, onOpen, onToggleSubtask }) {
 
 /**
  * "To me" as a feed of cards, one per task: the sender's picture and name on
- * top (checkbox in the corner), then the description, and — right below it —
- * the "1/3" pill if the task has subtasks. Checking the box (or swiping the
- * card right) marks it done, same as everywhere else.
+ * top (checkbox in the corner), with priority, time and day under it; then the
+ * description, any pictures that came with it, and the "1/3" pill if the task
+ * has subtasks. Each card carries its own date, so it still reads correctly
+ * wherever it sits. Checking the box (or swiping the card right) marks it done.
  */
-function TimelineCards({ tasks, now, showDay, onToggle, onOpen, onToggleSubtask }) {
+function TimelineCards({ tasks, now, onToggle, onOpen, onToggleSubtask }) {
   return (
     <ol className="task-cards">
       {tasks.map((task) => (
@@ -98,7 +101,6 @@ function TimelineCards({ tasks, now, showDay, onToggle, onOpen, onToggleSubtask 
           key={task.id}
           task={task}
           now={now}
-          showDay={showDay}
           onToggle={onToggle}
           onOpen={onOpen}
           onToggleSubtask={onToggleSubtask}

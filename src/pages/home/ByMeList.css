@@ -1,25 +1,4 @@
-/* ---------- By me: vertical list by day ---------- */
-.byme {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  width: 100%;
-  max-width: 760px;
-}
-
-.byme-section__title {
-  margin: 0 0 var(--space-1);
-  padding: 0 var(--space-2);
-  font-size: 12px;
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.02em;
-  color: var(--color-text-secondary);
-}
-
-.byme-section__title.is-today {
-  color: var(--color-primary);
-}
-
+/* ---------- By me: rows inside the shared day sections (DaySections.css) ---------- */
 .byme-section__list {
   display: flex;
   flex-direction: column;
@@ -190,13 +169,6 @@
 
 .byme-item.is-done .avatar-pic {
   opacity: 0.6;
-}
-
-.byme-empty {
-  padding: var(--space-8) var(--space-2);
-  font-size: 13px;
-  text-align: center;
-  color: var(--color-text-secondary);
 }
 
 @media (prefers-reduced-motion: reduce) {

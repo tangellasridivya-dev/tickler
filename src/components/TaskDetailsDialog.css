@@ -198,12 +198,14 @@
   color: var(--color-priority-high);
 }
 
+/* Reminder and Repeats tiles: the brand's amber and green, so the four tiles
+   read as one set instead of borrowing colours from outside the palette. */
 .detail-tile--purple .detail-tile__icon {
-  color: #8764b8;
+  color: var(--color-accent);
 }
 
 .detail-tile--teal .detail-tile__icon {
-  color: #038387;
+  color: var(--color-success);
 }
 
 .detail-tile__text {

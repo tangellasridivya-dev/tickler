@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useTasks, useToast } from './contexts.js'
 import { makeSubtask, nextOccurrence } from '../domain/task.js'
 import { addDays, atTime } from '../lib/dates.js'
+import { praise } from '../lib/praise.js'
 
 const ERROR = 'We couldn’t update that task. Please try again.'
 
@@ -54,8 +55,8 @@ export function useTaskActions() {
         toast.show({
           message: done
             ? spawned
-              ? `Done. Next one added for ${nextDue.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}`
-              : `Marked “${task.title}” as done`
+              ? `${praise()}. Next one added for ${nextDue.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' })}`
+              : `${praise()}. “${task.title}” is done`
             : `Moved “${task.title}” back to your list`,
           action: done
             ? {

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { Check, RotateCcw } from 'lucide-react'
+import './TaskLists.css'
 
 const START_SLOP = 8 // px of movement before deciding it's a swipe or a scroll
 const MAX_THRESHOLD = 96 // px; or 30% of the row, whichever is smaller
